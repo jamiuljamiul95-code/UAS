@@ -8,15 +8,15 @@
       <div class="col-md-2">
         <h6 class="fw-semibold">Produk</h6>
         <ul class="list-unstyled small">
-          <li><a href="/shop" class="footer-link">Semua Produk</a></li>
-          <li><a href="/shop?sort=terlaris" class="footer-link">Terlaris</a></li>
+          <li><a href="<?= BASE_URL ?>/shop" class="footer-link">Semua Produk</a></li>
+          <li><a href="<?= BASE_URL ?>/shop?sort=terlaris" class="footer-link">Terlaris</a></li>
         </ul>
       </div>
       <div class="col-md-2">
         <h6 class="fw-semibold">Akun</h6>
         <ul class="list-unstyled small">
-          <li><a href="mizu-design/login" class="footer-link">Login</a></li>
-          <li><a href="mizu-design/register" class="footer-link">Daftar</a></li>
+          <li><a href="<?= BASE_URL ?>/login" class="footer-link">Login</a></li>
+          <li><a href="<?= BASE_URL ?>/register" class="footer-link">Daftar</a></li>
         </ul>
       </div>
       <div class="col-md-4">
