@@ -9,8 +9,20 @@ class BaseController {
         require $file;
     }
 
-    protected function redirect(string $url): void {
-        header("Location: $url");
+    /**
+     * Redirect ke path relatif (misal: '/login', '/admin/dashboard').
+     * BASE_URL otomatis ditambahkan di depan, supaya semua controller
+     * tidak perlu menulis BASE_URL berulang-ulang secara manual.
+     */
+    protected function redirect(string $path): void {
+        // Kalau $path sudah berupa URL lengkap (http://...), jangan ditambah BASE_URL
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            header("Location: $path");
+            exit;
+        }
+
+        $path = '/' . ltrim($path, '/');
+        header("Location: " . BASE_URL . $path);
         exit;
     }
 
