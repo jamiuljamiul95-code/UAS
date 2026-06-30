@@ -17,8 +17,11 @@ use App\controllers\CartController;
 use App\controllers\CheckoutController;
 use App\controllers\WebhookController;
 use App\middleware\AuthMiddleware;
+use App\controllers\Admin\AdminController;
 use App\controllers\Admin\ProductController as AdminProductController;
 use App\controllers\Admin\CategoryController as AdminCategoryController;
+use App\controllers\Admin\OrderController as AdminOrderController;
+use App\controllers\Admin\UserController as AdminUserController;
 
 // ====== WEBHOOK (harus di luar middleware, dipanggil server Midtrans bukan browser) ======
 if ($uri === 'webhook/midtrans' && $method === 'POST') {
@@ -27,31 +30,31 @@ if ($uri === 'webhook/midtrans' && $method === 'POST') {
 }
 
 // ====== AUTH ======
-$auth = new AuthController();
-
-match (true) {
-    $uri === 'login'    && $method === 'GET'  => $auth->loginForm(),
-    $uri === 'login'    && $method === 'POST' => $auth->login(),
-    $uri === 'register' && $method === 'GET'  => $auth->registerForm(),
-    $uri === 'register' && $method === 'POST' => $auth->register(),
-    $uri === 'logout'                         => $auth->logout(),
-    default => null,
-};
-
-// Kalau salah satu route auth di atas sudah menangani & redirect/exit, baris ini tidak akan tercapai.
-// Tapi karena match() di atas tidak exit otomatis untuk 'default => null', kita lanjut cek route lain di bawah.
 if (in_array($uri, ['login', 'register', 'logout'])) {
-    exit; // sudah ditangani di atas
+    $auth = new AuthController();
+    match (true) {
+        $uri === 'login'    && $method === 'GET'  => $auth->loginForm(),
+        $uri === 'login'    && $method === 'POST' => $auth->login(),
+        $uri === 'register' && $method === 'GET'  => $auth->registerForm(),
+        $uri === 'register' && $method === 'POST' => $auth->register(),
+        $uri === 'logout'                         => $auth->logout(),
+    };
+    exit;
 }
 
 // ====== ADMIN (semua butuh login + role admin) ======
 if (str_starts_with($uri, 'admin')) {
     AuthMiddleware::adminOnly();
 
+    $adminCtrl    = new AdminController();
     $productCtrl  = new AdminProductController();
     $categoryCtrl = new AdminCategoryController();
+    $orderCtrl    = new AdminOrderController();
+    $userCtrl     = new AdminUserController();
 
     match (true) {
+        $uri === 'admin/dashboard' && $method === 'GET' => $adminCtrl->dashboard(),
+
         $uri === 'admin/products'        && $method === 'GET'  => $productCtrl->index(),
         $uri === 'admin/products/create' && $method === 'GET'  => $productCtrl->createForm(),
         $uri === 'admin/products'        && $method === 'POST' => $productCtrl->store(),
@@ -63,6 +66,14 @@ if (str_starts_with($uri, 'admin')) {
         $uri === 'admin/categories'        && $method === 'POST' => $categoryCtrl->store(),
         $uri === 'admin/categories/update' && $method === 'POST' => $categoryCtrl->update(),
         $uri === 'admin/categories/delete' && $method === 'POST' => $categoryCtrl->destroy(),
+
+        $uri === 'admin/orders'               && $method === 'GET'  => $orderCtrl->index(),
+        $uri === 'admin/orders/detail'         && $method === 'GET'  => $orderCtrl->detail(),
+        $uri === 'admin/orders/update-status'  && $method === 'POST' => $orderCtrl->updateStatus(),
+
+        $uri === 'admin/users'                && $method === 'GET'  => $userCtrl->index(),
+        $uri === 'admin/users/toggle-status'  && $method === 'POST' => $userCtrl->toggleStatus(),
+        $uri === 'admin/users/delete'          && $method === 'POST' => $userCtrl->destroy(),
 
         default => (function () {
             http_response_code(404);

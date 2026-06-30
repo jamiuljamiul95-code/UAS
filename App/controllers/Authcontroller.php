@@ -38,11 +38,11 @@ class AuthController extends BaseController {
             return;
         }
 
-        // Set session
         $_SESSION['user_id']   = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_role'] = $user['role'];
 
+        // BASE_URL otomatis ditambahkan oleh redirect() di BaseController
         $this->redirect($user['role'] === 'admin' ? '/admin/dashboard' : '/');
     }
 
