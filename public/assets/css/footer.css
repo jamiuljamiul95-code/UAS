@@ -1,0 +1,164 @@
+:root {
+  --primary: #2563eb;
+  --secondary: #7c3aed;
+  --dark: #111827;
+}
+
+/* ===== Footer Base ===== */
+.footer-mizu {
+  background: linear-gradient(180deg, var(--dark) 0%, #0a0e16 100%);
+  color: #d1d5db;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-mizu::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--secondary),
+    var(--primary)
+  );
+  background-size: 200% 100%;
+  animation: footerGradientShift 6s linear infinite;
+}
+
+@keyframes footerGradientShift {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.footer-mizu h5,
+.footer-mizu h6 {
+  color: #fff;
+}
+
+.footer-mizu h5 {
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+}
+
+.footer-mizu h6 {
+  font-size: 13.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-mizu h6::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+/* ===== Footer Links ===== */
+.footer-link {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 13.5px;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.footer-mizu ul li {
+  margin-bottom: 10px;
+}
+
+.footer-link::before {
+  content: "→";
+  opacity: 0;
+  margin-right: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  color: var(--secondary);
+}
+
+.footer-link:hover {
+  color: #fff;
+  padding-left: 4px;
+}
+
+.footer-link:hover::before {
+  opacity: 1;
+  width: 14px;
+  margin-right: 4px;
+}
+
+/* ===== Payment Methods ===== */
+.footer-payment-text {
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.9;
+}
+
+.footer-payment-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.payment-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.payment-badge:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.4);
+  color: #fff;
+}
+
+/* ===== Divider ===== */
+.footer-mizu hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  opacity: 1;
+}
+
+/* ===== Bottom Bar ===== */
+.footer-bottom {
+  font-size: 12.5px;
+  color: #6b7280;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 767px) {
+  .footer-mizu .col-md-4,
+  .footer-mizu .col-md-2 {
+    text-align: left;
+    margin-bottom: 8px;
+  }
+}

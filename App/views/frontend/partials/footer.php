@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/footer.css">
+
 <footer class="footer-mizu mt-5 pt-5 pb-4">
   <div class="container">
     <div class="row g-4">
@@ -21,11 +23,20 @@
       </div>
       <div class="col-md-4">
         <h6 class="fw-semibold">Pembayaran</h6>
-        <p class="small text-secondary">QRIS · Dana · OVO · ShopeePay · GoPay · Transfer Bank · Virtual Account</p>
+        <p class="footer-payment-text mb-0">Transaksi aman lewat berbagai metode pembayaran favoritmu.</p>
+        <div class="footer-payment-badges">
+          <span class="payment-badge">QRIS</span>
+          <span class="payment-badge">Dana</span>
+          <span class="payment-badge">OVO</span>
+          <span class="payment-badge">ShopeePay</span>
+          <span class="payment-badge">GoPay</span>
+          <span class="payment-badge">Transfer Bank</span>
+          <span class="payment-badge">Virtual Account</span>
+        </div>
       </div>
     </div>
-    <hr class="my-4 opacity-10">
-    <p class="text-center small text-secondary mb-0">&copy; <?= date('Y') ?> Mizu Design. All rights reserved.</p>
+    <hr class="my-4">
+    <p class="text-center footer-bottom mb-0">&copy; <?= date('Y') ?> Mizu Design. All rights reserved.</p>
   </div>
 </footer>
 
