@@ -16,6 +16,7 @@ use App\controllers\ProductController;
 use App\controllers\CartController;
 use App\controllers\CheckoutController;
 use App\controllers\WebhookController;
+use App\controllers\DashboardController;
 use App\middleware\AuthMiddleware;
 use App\controllers\Admin\AdminController;
 use App\controllers\Admin\ProductController as AdminProductController;
@@ -78,6 +79,29 @@ if (str_starts_with($uri, 'admin')) {
         default => (function () {
             http_response_code(404);
             die('404 — Halaman admin tidak ditemukan.');
+        })()
+    };
+    exit;
+}
+
+// ====== DASHBOARD CUSTOMER (butuh login, tidak harus admin) ======
+if (str_starts_with($uri, 'dashboard')) {
+    AuthMiddleware::check();
+
+    $dashboardCtrl = new DashboardController();
+
+    match (true) {
+        $uri === 'dashboard'                  && $method === 'GET'  => $dashboardCtrl->index(),
+        $uri === 'dashboard/profile'          && $method === 'GET'  => $dashboardCtrl->profile(),
+        $uri === 'dashboard/profile/update'   && $method === 'POST' => $dashboardCtrl->updateProfile(),
+        $uri === 'dashboard/password/update'  && $method === 'POST' => $dashboardCtrl->updatePassword(),
+        $uri === 'dashboard/orders'           && $method === 'GET'  => $dashboardCtrl->orders(),
+        $uri === 'dashboard/orders/detail'    && $method === 'GET'  => $dashboardCtrl->orderDetail(),
+        $uri === 'dashboard/downloads'        && $method === 'GET'  => $dashboardCtrl->downloads(),
+
+        default => (function () {
+            http_response_code(404);
+            die('404 — Halaman dashboard tidak ditemukan.');
         })()
     };
     exit;

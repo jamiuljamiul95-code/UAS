@@ -38,7 +38,7 @@ class Order extends BaseModel {
     }
 
     /**
-     * Ambil semua order untuk admin, lengkap dengan nama & email pembeli.
+     * Ambil semua order untuk ADMIN, lengkap dengan nama & email pembeli.
      * Bisa difilter by status (pending/paid/failed/refund).
      */
     public function all(?string $status = null): array {
@@ -59,6 +59,17 @@ class Order extends BaseModel {
                 ORDER BY o.created_at DESC
             ");
         }
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Ambil semua order milik 1 user (untuk halaman riwayat pesanan CUSTOMER).
+     */
+    public function byUser(int $userId): array {
+        $stmt = $this->db->prepare("
+            SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC
+        ");
+        $stmt->execute([$userId]);
         return $stmt->fetchAll();
     }
 

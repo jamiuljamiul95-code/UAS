@@ -6,11 +6,11 @@
       <h6 class="fw-semibold mb-3">Kategori</h6>
       <ul class="list-unstyled small">
         <li class="mb-2">
-          <a href="/shop" class="text-decoration-none <?= $activeCategory === '' ? 'fw-semibold text-primary' : 'text-dark' ?>">Semua Produk</a>
+          <a href="<?= BASE_URL ?>/shop" class="text-decoration-none <?= $activeCategory === '' ? 'fw-semibold text-primary' : 'text-dark' ?>">Semua Produk</a>
         </li>
         <?php foreach ($categories as $cat): ?>
           <li class="mb-2">
-            <a href="/shop?category=<?= $cat['slug'] ?>" class="text-decoration-none <?= $activeCategory === $cat['slug'] ? 'fw-semibold text-primary' : 'text-dark' ?>">
+            <a href="<?= BASE_URL ?>/shop?category=<?= $cat['slug'] ?>" class="text-decoration-none <?= $activeCategory === $cat['slug'] ? 'fw-semibold text-primary' : 'text-dark' ?>">
               <?= htmlspecialchars($cat['name']) ?>
             </a>
           </li>
@@ -29,12 +29,12 @@
       <div class="row g-4">
         <?php foreach ($products as $p): ?>
           <div class="col-6 col-md-4" data-aos="fade-up">
-            <a href="/product/<?= $p['slug'] ?>" class="text-decoration-none text-dark">
+            <a href="<?= BASE_URL ?>/product/<?= $p['slug'] ?>" class="text-decoration-none text-dark">
               <div class="product-card position-relative">
                 <?php if ($p['discount'] > 0): ?>
                   <span class="badge-discount">-<?= (int)$p['discount'] ?>%</span>
                 <?php endif; ?>
-                <img src="/assets/images/products/<?= htmlspecialchars($p['thumbnail'] ?: 'placeholder.jpg') ?>" alt="<?= htmlspecialchars($p['title']) ?>">
+                <img src="<?= BASE_URL ?>/assets/images/products/<?= htmlspecialchars($p['thumbnail'] ?: 'placeholder.jpg') ?>" alt="<?= htmlspecialchars($p['title']) ?>">
                 <div class="body">
                   <div class="cat-tag"><?= htmlspecialchars($p['category_name']) ?></div>
                   <div class="title"><?= htmlspecialchars($p['title']) ?></div>
