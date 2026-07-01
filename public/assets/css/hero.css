@@ -1,0 +1,236 @@
+/* ===== Hero Section ===== */
+.hero-section {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%);
+  padding: 60px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: 40px;
+  left: -80px;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 50%;
+}
+
+.hero-left {
+  padding: 20px 0 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-left .badge-promo {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  letter-spacing: 0.04em;
+}
+
+.hero-left h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.hero-left p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  margin-bottom: 28px;
+  max-width: 420px;
+}
+
+.hero-search-wrap {
+  display: flex;
+  gap: 10px;
+  max-width: 460px;
+}
+
+.hero-search-wrap input {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hero-search-wrap input:focus {
+  outline: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.hero-search-wrap button {
+  background: #fff;
+  color: #2563eb;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 22px;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hero-search-wrap button:hover {
+  background: #f0f4ff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Hero Right - Promo Card ===== */
+.hero-right {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0;
+}
+
+.promo-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 28px 24px;
+  color: #fff;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 24px;
+}
+
+.promo-card .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.promo-card .pct {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+}
+
+.promo-card .pct span {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.promo-card .desc {
+  font-size: 13.5px;
+  opacity: 0.85;
+  margin: 6px 0 4px;
+}
+
+.promo-card .timer {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-bottom: 18px;
+}
+
+.promo-card .btn-promo {
+  display: block;
+  background: #fff;
+  color: #2563eb;
+  border: none;
+  border-radius: 10px;
+  padding: 11px;
+  font-weight: 700;
+  font-size: 13.5px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.promo-card .btn-promo:hover {
+  background: #f0f4ff;
+  color: #2563eb;
+}
+
+/* ===== Stats Bar ===== */
+.stats-bar {
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 22px 32px;
+  display: flex;
+  gap: 0;
+  justify-content: space-around;
+  box-shadow: 0 -4px 24px rgba(37, 99, 235, 0.08);
+  position: relative;
+  z-index: 3;
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+  position: relative;
+}
+
+.stat-item + .stat-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.stat-item .number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1.2;
+}
+
+.stat-item .label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+@media (max-width: 767px) {
+  .hero-left h1 {
+    font-size: 1.9rem;
+  }
+  .hero-right {
+    display: none;
+  }
+  .stats-bar {
+    padding: 16px;
+    gap: 0;
+  }
+  .stat-item .number {
+    font-size: 1.2rem;
+  }
+}

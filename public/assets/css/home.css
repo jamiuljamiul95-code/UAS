@@ -206,3 +206,19 @@ body {
   border-radius: 20px;
   box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
 }
+/* Tambahkan ini ke bagian bawah home.css yang sudah ada */
+
+.newsletter-section {
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.06),
+    rgba(124, 58, 237, 0.06)
+  );
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  border-radius: 20px;
+  padding: 32px 36px;
+}
+
+.newsletter-section h5 {
+  color: var(--dark, #111827);
+}
