@@ -28,17 +28,15 @@ $finalPrice = $product['discount'] > 0
       <p class="text-secondary small mb-1"><i class="ti ti-shopping-cart"></i> <?= (int)$product['sales'] ?> terjual</p>
 
       <div class="d-flex gap-2 mt-4">
-        <form action="/cart/add" method="POST" class="flex-fill">
-          <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-          <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
-            <i class="ti ti-shopping-cart-plus"></i> Tambah ke Keranjang
-          </button>
-        </form>
-        <button type="button" class="btn btn-outline-secondary rounded-pill px-3" onclick="addWishlist(<?= $product['id'] ?>)">
+        <button type="button" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold"
+          onclick="addToCart(<?= $product['id'] ?>)">
+          <i class="ti ti-shopping-cart-plus"></i> Tambah ke Keranjang
+        </button>
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-3"
+          onclick="addWishlist(<?= $product['id'] ?>)">
           <i class="ti ti-heart"></i>
         </button>
       </div>
-
       <hr class="my-4">
       <h6 class="fw-semibold mb-2">Deskripsi Produk</h6>
       <p class="text-secondary" style="white-space:pre-line"><?= htmlspecialchars($product['description']) ?></p>
@@ -47,12 +45,42 @@ $finalPrice = $product['discount'] > 0
 </div>
 
 <script>
-function addWishlist(id) {
-  fetch('/wishlist/add', { method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'}, body: 'product_id=' + id })
-    .then(r => r.json())
-    .then(data => {
-      Swal.fire({ icon: data.success ? 'success' : 'error', title: data.message, timer: 1800, showConfirmButton: false });
+function addToCart(id) {
+  fetch('<?= BASE_URL ?>/cart/add', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'product_id=' + id
+  })
+  .then(r => r.json())
+  .then(data => {
+    Swal.fire({
+      icon: data.success ? 'success' : 'error',
+      title: data.success ? 'Ditambahkan!' : 'Gagal',
+      text: data.message,
+      timer: 1800,
+      showConfirmButton: false
     });
+  })
+  .catch(() => {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal menghubungi server.' });
+  });
+}
+
+function addWishlist(id) {
+  fetch('<?= BASE_URL ?>/wishlist/add', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'product_id=' + id
+  })
+  .then(r => r.json())
+  .then(data => {
+    Swal.fire({
+      icon: data.success ? 'success' : 'error',
+      title: data.message,
+      timer: 1800,
+      showConfirmButton: false
+    });
+  });
 }
 </script>
 

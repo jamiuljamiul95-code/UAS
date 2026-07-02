@@ -17,6 +17,7 @@ use App\controllers\CartController;
 use App\controllers\CheckoutController;
 use App\controllers\WebhookController;
 use App\controllers\DashboardController;
+use App\controllers\WishlistController;
 use App\middleware\AuthMiddleware;
 use App\controllers\Admin\AdminController;
 use App\controllers\Admin\ProductController as AdminProductController;
@@ -112,7 +113,7 @@ $home        = new HomeController();
 $productCtrl = new ProductController();
 $cartCtrl    = new CartController();
 $checkoutCtrl = new CheckoutController();
-
+$wishlistCtrl = new WishlistController();
 match (true) {
     $uri === ''                       => $home->index(),
     $uri === 'shop'                   => $productCtrl->shop(),
@@ -126,6 +127,10 @@ match (true) {
     $uri === 'checkout'         && $method === 'GET'  => $checkoutCtrl->index(),
     $uri === 'checkout'         && $method === 'POST' => $checkoutCtrl->process(),
     $uri === 'checkout/pending' && $method === 'GET'  => $checkoutCtrl->pending(),
+
+
+    $uri === 'wishlist'     && $method === 'GET'  => $wishlistCtrl->index(),
+    $uri === 'wishlist/add' && $method === 'POST' => $wishlistCtrl->add(),
 
     default => (function () {
         http_response_code(404);

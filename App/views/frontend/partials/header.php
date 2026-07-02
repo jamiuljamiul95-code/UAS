@@ -41,20 +41,42 @@
         </li>
 
         <?php if (isset($_SESSION['user_id']) && $_SESSION['user_role'] === 'admin'): ?>
-          <!-- Admin: tampilkan link langsung ke Admin Panel, BUKAN dashboard customer -->
           <li class="nav-item"><a class="btn btn-sm btn-nav-user rounded-pill" href="<?= BASE_URL ?>/admin/dashboard">
             <?= htmlspecialchars($_SESSION['user_name']) ?> (Admin)
           </a></li>
 
         <?php elseif (isset($_SESSION['user_id'])): ?>
-          <!-- Customer biasa yang sudah login -->
+  <!-- Tambahkan icon keranjang di sini -->
+          <li class="nav-item">
+    <a class="nav-icon-link position-relative" href="<?= BASE_URL ?>/cart">
+      <i class="ti ti-shopping-cart"></i>
+      <?php
+        // Hitung jumlah item di cart dari session
+        $cartCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+        if ($cartCount > 0):
+      ?>
+        <span class="cart-badge"><?= $cartCount ?></span>
+      <?php endif; ?>
+    </a>
+          </li>
           <li class="nav-item"><a class="nav-icon-link" href="<?= BASE_URL ?>/wishlist"><i class="ti ti-heart"></i></a></li>
           <li class="nav-item"><a class="btn btn-sm btn-nav-user rounded-pill" href="<?= BASE_URL ?>/dashboard">
             <?= htmlspecialchars($_SESSION['user_name']) ?>
           </a></li>
 
         <?php else: ?>
-          <!-- Belum login -->
+          <!-- Keranjang untuk guest juga -->
+          <li class="nav-item">
+            <a class="nav-icon-link position-relative" href="<?= BASE_URL ?>/cart">
+              <i class="ti ti-shopping-cart"></i>
+              <?php
+                $cartCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+                if ($cartCount > 0):
+              ?>
+                <span class="cart-badge"><?= $cartCount ?></span>
+              <?php endif; ?>
+            </a>
+          </li>
           <li class="nav-item"><a class="btn btn-sm btn-nav-outline rounded-pill" href="<?= BASE_URL ?>/login">Login</a></li>
           <li class="nav-item"><a class="btn btn-sm btn-nav-primary rounded-pill" href="<?= BASE_URL ?>/register">Daftar</a></li>
         <?php endif; ?>

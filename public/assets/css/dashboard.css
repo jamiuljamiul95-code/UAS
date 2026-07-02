@@ -1,0 +1,225 @@
+:root {
+  --primary: #2563eb;
+  --secondary: #7c3aed;
+  --dark: #111827;
+  --light: #f9fafb;
+}
+
+/* ===== Dashboard Layout ===== */
+.dashboard-wrapper {
+  background: var(--light);
+  min-height: 80vh;
+  padding: 32px 0 60px;
+}
+
+/* ===== Sidebar ===== */
+.dashboard-sidebar {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.sidebar-user {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 24px 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.sidebar-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 auto 12px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  object-fit: cover;
+}
+
+.sidebar-user .user-name {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.sidebar-user .user-email {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.sidebar-nav {
+  padding: 12px 0;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+  background: rgba(37, 99, 235, 0.05);
+  color: var(--primary);
+}
+
+.sidebar-nav a.active {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+  border-left-color: var(--primary);
+}
+
+.sidebar-nav a.logout-link {
+  color: #dc2626;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  margin-top: 8px;
+}
+
+.sidebar-nav a.logout-link:hover {
+  background: rgba(220, 38, 38, 0.05);
+  color: #dc2626;
+}
+
+.sidebar-nav a i {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+/* ===== Dashboard Content ===== */
+.dashboard-content {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 28px;
+}
+
+.dashboard-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-title i {
+  color: var(--primary);
+  font-size: 20px;
+}
+
+/* ===== Form Styling ===== */
+.form-section {
+  background: var(--light);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-section h6 {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-section h6 i {
+  color: var(--primary);
+}
+
+.form-section label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.form-section .form-control {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.2s ease;
+}
+
+.form-section .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-save {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.btn-password {
+  background: #fff;
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-password:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ===== Alert ===== */
+.alert-success-custom {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #047857;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.alert-error-custom {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}

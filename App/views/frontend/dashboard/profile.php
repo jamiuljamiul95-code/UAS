@@ -1,68 +1,87 @@
 <?php require ROOT . '/app/views/frontend/partials/header.php'; ?>
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/dashboard.css">
 
-<div class="container py-5">
-  <div class="row g-4">
-    <div class="col-md-3">
-      <?php require ROOT . '/app/views/frontend/dashboard/partials/sidebar.php'; ?>
-    </div>
+<div class="dashboard-wrapper">
+  <div class="container">
+    <div class="row g-4">
 
-    <div class="col-md-9">
-      <h4 class="fw-bold mb-4">Profil Saya</h4>
+      <!-- Sidebar -->
+      <div class="col-lg-3">
+        <?php require ROOT . '/app/views/frontend/dashboard/partials/sidebar.php'; ?>
+      </div>
 
-      <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-      <?php endif; ?>
-      <?php if (!empty($success)): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-      <?php endif; ?>
+      <!-- Konten -->
+      <div class="col-lg-9">
+        <div class="dashboard-content">
 
-      <div class="card shadow-sm mb-4">
-        <div class="card-body">
-          <h6 class="fw-semibold mb-3">Data Diri</h6>
+          <?php if (!empty($error)): ?>
+            <div class="alert-error-custom">⚠️ <?= htmlspecialchars($error) ?></div>
+          <?php endif; ?>
+          <?php if (!empty($success)): ?>
+            <div class="alert-success-custom">✅ <?= htmlspecialchars($success) ?></div>
+          <?php endif; ?>
 
-          <div class="d-flex align-items-center gap-3 mb-3">
-            <img src="<?= $user['photo'] ? BASE_URL . '/assets/images/avatars/' . htmlspecialchars($user['photo']) : 'https://ui-avatars.com/api/?name=' . urlencode($user['name']) ?>"
-                 alt="Foto profil" class="rounded-circle" width="64" height="64" style="object-fit:cover">
+          <!-- Form Data Diri -->
+          <div class="dashboard-title">
+            <i class="ti ti-user-circle"></i> Profil Saya
           </div>
 
           <form action="<?= BASE_URL ?>/dashboard/profile/update" method="POST" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label class="form-label">Nama</label>
-              <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($user['name']) ?>" required>
+            <div class="form-section">
+              <h6><i class="ti ti-id-badge"></i> Data Diri</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label>Nama Lengkap</label>
+                  <input type="text" name="name" class="form-control"
+                         value="<?= htmlspecialchars($user['name']) ?>" required>
+                </div>
+                <div class="col-md-6">
+                  <label>Email</label>
+                  <input type="email" name="email" class="form-control"
+                         value="<?= htmlspecialchars($user['email']) ?>" required>
+                </div>
+                <div class="col-md-6">
+                  <label>Foto Profil</label>
+                  <input type="file" name="photo" accept=".jpg,.jpeg,.png,.webp" class="form-control">
+                  <small class="text-secondary">JPG/PNG/WEBP, maks 2MB. Kosongkan jika tidak ingin mengubah.</small>
+                </div>
+              </div>
+              <div class="mt-3">
+                <button type="submit" class="btn-save">Simpan Perubahan</button>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Foto Profil</label>
-              <input type="file" name="photo" class="form-control" accept=".jpg,.jpeg,.png,.webp">
-            </div>
-            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
           </form>
+
+          <!-- Form Ganti Password -->
+          <form action="<?= BASE_URL ?>/dashboard/password/update" method="POST">
+            <div class="form-section mb-0">
+              <h6><i class="ti ti-lock"></i> Ganti Password</h6>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label>Password Lama</label>
+                  <input type="password" name="current_password" class="form-control"
+                         placeholder="••••••••" required>
+                </div>
+                <div class="col-md-4">
+                  <label>Password Baru</label>
+                  <input type="password" name="new_password" class="form-control"
+                         placeholder="Min. 8 karakter" required>
+                </div>
+                <div class="col-md-4">
+                  <label>Konfirmasi Password Baru</label>
+                  <input type="password" name="confirm_password" class="form-control"
+                         placeholder="Ulangi password baru" required>
+                </div>
+              </div>
+              <div class="mt-3">
+                <button type="submit" class="btn-password">Ganti Password</button>
+              </div>
+            </div>
+          </form>
+
         </div>
       </div>
 
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h6 class="fw-semibold mb-3">Ganti Password</h6>
-          <form action="<?= BASE_URL ?>/dashboard/password/update" method="POST">
-            <div class="mb-3">
-              <label class="form-label">Password Lama</label>
-              <input type="password" name="old_password" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Password Baru</label>
-              <input type="password" name="new_password" class="form-control" minlength="8" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Konfirmasi Password Baru</label>
-              <input type="password" name="confirm_password" class="form-control" minlength="8" required>
-            </div>
-            <button type="submit" class="btn btn-outline-primary">Ganti Password</button>
-          </form>
-        </div>
-      </div>
     </div>
   </div>
 </div>
