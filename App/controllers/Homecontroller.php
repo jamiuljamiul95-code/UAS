@@ -17,7 +17,7 @@ class HomeController extends BaseController {
     }
 
     public function index(): void {
-        $categories   = $this->category->allWithCount(); // dengan jumlah produk
+        $categories   = $this->category->parentsWithCount(); // dengan jumlah produk
         $latest       = $this->product->published(8, 0);
         $allPublished = $this->product->published(100, 0);
         $allUsers     = $this->user->all();

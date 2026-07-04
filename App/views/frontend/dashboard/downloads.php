@@ -28,8 +28,9 @@
                     <?php if ($expired): ?>
                       <span class="badge bg-secondary">Link kedaluwarsa</span>
                     <?php else: ?>
-                      <a href="<?= BASE_URL ?>/download/<?= htmlspecialchars($d['token']) ?>" class="btn btn-sm btn-primary">
-                        Download (<?= (int)$d['download_count'] ?>x)
+                      <a href="<?= BASE_URL ?>/download/<?= $d['token'] ?>" 
+                         class="btn btn-primary btn-sm rounded-pill">
+                         Download (<?= $d['download_count'] ?>x)
                       </a>
                       <span class="small text-secondary d-block mt-1">
                         Berlaku sampai <?= date('d M Y H:i', strtotime($d['expired_at'])) ?>

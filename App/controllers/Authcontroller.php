@@ -85,6 +85,12 @@ class AuthController extends BaseController {
         }
 
         $id = $this->user->register($name, $email, $password);
+        $notif = new \App\models\Notification();
+        $notif->push(null, 'register',
+         'User Baru Daftar',
+        $name . ' (' . $email . ') baru saja mendaftar.',
+         '/admin/users'
+        );
 
         $_SESSION['user_id']   = $id;
         $_SESSION['user_name'] = $name;

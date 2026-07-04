@@ -14,6 +14,7 @@
           <li><a href="<?= BASE_URL ?>/shop?sort=terlaris" class="footer-link">Terlaris</a></li>
         </ul>
       </div>
+      <!-- akun -->
       <div class="col-md-2">
         <h6 class="fw-semibold">Akun</h6>
         <ul class="list-unstyled small">
@@ -21,6 +22,15 @@
           <li><a href="<?= BASE_URL ?>/register" class="footer-link">Daftar</a></li>
         </ul>
       </div>
+      <!-- kategori -->
+       <div class="col-md-2">
+        <h6 class="fw-semibold">Kategori</h6>
+        <ul class="list-unstyled small">
+          <li><a href="<?= BASE_URL ?>/shop" class="footer-link">Semua Produk</a></li>
+          <li><a href="<?= BASE_URL ?>/shop?sort=terlaris" class="footer-link">Terlaris</a></li>
+        </ul>
+      </div>
+
       <div class="col-md-4">
         <h6 class="fw-semibold">Pembayaran</h6>
         <p class="footer-payment-text mb-0">Transaksi aman lewat berbagai metode pembayaran favoritmu.</p>

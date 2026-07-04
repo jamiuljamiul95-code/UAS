@@ -19,6 +19,7 @@ use App\controllers\WebhookController;
 use App\controllers\DashboardController;
 use App\controllers\WishlistController;
 use App\middleware\AuthMiddleware;
+use App\controllers\DownloadController;
 use App\controllers\Admin\AdminController;
 use App\controllers\Admin\ProductController as AdminProductController;
 use App\controllers\Admin\CategoryController as AdminCategoryController;
@@ -114,6 +115,7 @@ $productCtrl = new ProductController();
 $cartCtrl    = new CartController();
 $checkoutCtrl = new CheckoutController();
 $wishlistCtrl = new WishlistController();
+$downloadCtrl = new DownloadController();
 match (true) {
     $uri === ''                       => $home->index(),
     $uri === 'shop'                   => $productCtrl->shop(),
@@ -132,8 +134,26 @@ match (true) {
     $uri === 'wishlist'     && $method === 'GET'  => $wishlistCtrl->index(),
     $uri === 'wishlist/add' && $method === 'POST' => $wishlistCtrl->add(),
 
+    str_starts_with($uri, 'download/') => $downloadCtrl->serve(substr($uri, 9)),
+
     default => (function () {
         http_response_code(404);
         die('404 — Halaman tidak ditemukan.');
     })()
 };
+
+// Tandai semua notif dibaca - admin
+if ($uri === 'admin/notifications/read-all') {
+    $n = new \App\models\Notification();
+    $n->markAllRead(null);
+    $this->redirect('/admin/dashboard');
+    exit;
+}
+
+// Tandai semua notif dibaca - customer
+if ($uri === 'notifications/read-all' && isset($_SESSION['user_id'])) {
+    $n = new \App\models\Notification();
+    $n->markAllRead($_SESSION['user_id']);
+    header('Location: ' . BASE_URL . '/');
+    exit;
+}

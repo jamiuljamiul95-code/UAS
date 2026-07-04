@@ -41,12 +41,22 @@ class OrderController extends BaseController {
 
     // POST /admin/orders/update-status
     public function updateStatus(): void {
-        $id = (int)$_POST['id'];
-        $status = $_POST['status'];
+    $id = (int)$_POST['id'];
+    $status = $_POST['status'];
 
-        $paymentStatus = in_array($status, ['paid']) ? 'paid' : 'unpaid';
-        $this->order->updateStatus($id, $status, $paymentStatus);
+    $paymentStatus = $status === 'paid' ? 'paid' : 'unpaid';
+    $this->order->updateStatus($id, $status, $paymentStatus);
 
-        $this->redirect('/admin/orders/detail?id=' . $id);
+    // Kalau status diubah jadi Paid, generate token download otomatis
+    if ($status === 'paid') {
+        $order = $this->order->find($id);
+        if ($order) {
+            require_once ROOT . '/app/models/Download.php';
+            $download = new \App\models\Download();
+            $download->generateForOrder($order['user_id'], $order['id']);
+        }
     }
+
+    $this->redirect('/admin/orders/detail?id=' . $id);
+}
 }

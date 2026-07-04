@@ -80,4 +80,25 @@ class Product extends BaseModel {
         $stmt->execute($ids);
         return $stmt->fetchAll();
     }
+
+    /**
+ * Ambil semua produk dari kategori utama + semua sub-kategorinya
+ */
+    public function byParentCategory(int $parentId): array {
+        $stmt = $this->db->prepare("
+            SELECT p.*, c.name AS category_name
+            FROM products p
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.status = 'published'
+            AND (
+                p.category_id = ?
+                OR p.category_id IN (
+                    SELECT id FROM categories WHERE parent_id = ?
+                )
+            )
+            ORDER BY p.created_at DESC
+        ");
+        $stmt->execute([$parentId, $parentId]);
+        return $stmt->fetchAll();
+    }
 }

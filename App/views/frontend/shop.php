@@ -3,20 +3,50 @@
 <div class="container py-5">
   <div class="row">
     <div class="col-lg-3 mb-4">
-      <h6 class="fw-semibold mb-3">Kategori</h6>
-      <ul class="list-unstyled small">
-        <li class="mb-2">
-          <a href="<?= BASE_URL ?>/shop" class="text-decoration-none <?= $activeCategory === '' ? 'fw-semibold text-primary' : 'text-dark' ?>">Semua Produk</a>
-        </li>
-        <?php foreach ($categories as $cat): ?>
-          <li class="mb-2">
-            <a href="<?= BASE_URL ?>/shop?category=<?= $cat['slug'] ?>" class="text-decoration-none <?= $activeCategory === $cat['slug'] ? 'fw-semibold text-primary' : 'text-dark' ?>">
-              <?= htmlspecialchars($cat['name']) ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
+  <h6 class="fw-semibold mb-3">Kategori</h6>
+  <ul class="list-unstyled small">
+    <li class="mb-2">
+      <a href="<?= BASE_URL ?>/shop"
+         class="text-decoration-none <?= $activeCategory === '' ? 'fw-semibold text-primary' : 'text-dark' ?>">
+        Semua Produk
+      </a>
+    </li>
+
+    <?php foreach ($categories as $parent): ?>
+      <li class="mb-1">
+        <!-- Parent kategori — bisa diklik untuk expand/collapse -->
+        <div class="d-flex align-items-center justify-content-between cat-parent-toggle"
+             data-target="cat-<?= $parent['id'] ?>"
+             style="cursor:pointer; padding:6px 0">
+          <span class="fw-semibold" style="color:#111827; font-size:13px">
+            <?= htmlspecialchars($parent['name']) ?>
+          </span>
+          <?php if (!empty($parent['children'])): ?>
+            <i class="ti ti-chevron-down" style="font-size:13px; color:#9ca3af; transition:transform 0.2s"
+               id="arrow-<?= $parent['id'] ?>"></i>
+          <?php endif; ?>
+        </div>
+
+        <?php if (!empty($parent['children'])): ?>
+          <ul class="list-unstyled ps-3 cat-children" id="cat-<?= $parent['id'] ?>"
+              style="display:none">
+            <?php foreach ($parent['children'] as $child): ?>
+              <li class="mb-1">
+                <a href="<?= BASE_URL ?>/shop?category=<?= $child['slug'] ?>"
+                   class="text-decoration-none d-flex align-items-center gap-1
+                          <?= $activeCategory === $child['slug'] ? 'fw-semibold text-primary' : 'text-secondary' ?>"
+                   style="font-size:13px; padding:4px 0">
+                  <span style="color:#d1d5db">├</span>
+                  <?= htmlspecialchars($child['name']) ?>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+</div>
 
     <div class="col-lg-9">
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -51,5 +81,36 @@
     </div>
   </div>
 </div>
+
+
+
+<script>
+// Accordion sidebar kategori
+document.querySelectorAll('.cat-parent-toggle').forEach(function(toggle) {
+  toggle.addEventListener('click', function() {
+    var target = this.dataset.target;
+    var children = document.getElementById(target);
+    var arrow = document.getElementById('arrow-' + target.replace('cat-', ''));
+
+    if (children) {
+      var isOpen = children.style.display !== 'none';
+      children.style.display = isOpen ? 'none' : 'block';
+      if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+  });
+});
+
+// Auto-expand kategori yang sedang aktif
+<?php foreach ($categories as $parent): ?>
+  <?php foreach ($parent['children'] as $child): ?>
+    <?php if ($activeCategory === $child['slug']): ?>
+      document.getElementById('cat-<?= $parent['id'] ?>').style.display = 'block';
+      var arrow = document.getElementById('arrow-<?= $parent['id'] ?>');
+      if (arrow) arrow.style.transform = 'rotate(180deg)';
+    <?php endif; ?>
+  <?php endforeach; ?>
+<?php endforeach; ?>
+</script>
+
 
 <?php require ROOT . '/app/views/frontend/partials/footer.php'; ?>

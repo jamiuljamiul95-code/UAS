@@ -43,7 +43,7 @@
           <span class="text-primary">Rp <?= number_format($total,0,',','.') ?></span>
         </div>
 
-        <form action="/checkout" method="POST">
+        <form action=" <?=BASE_URL?>/checkout" method="POST">
           <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">
             <i class="ti ti-lock"></i> Bayar Sekarang
           </button>

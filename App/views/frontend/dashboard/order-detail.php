@@ -1,4 +1,5 @@
 <?php require ROOT . '/app/views/frontend/partials/header.php'; ?>
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/dashboard.css">
 
 <div class="container py-5">
   <div class="row g-4">

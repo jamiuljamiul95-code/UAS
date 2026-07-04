@@ -16,34 +16,48 @@ class CategoryController extends BaseController {
         $categories = $this->category->all();
         $this->view('admin/categories/index', ['categories' => $categories]);
     }
-
     public function store(): void {
-        $name = trim($_POST['name'] ?? '');
-        if (!$name) { $this->redirect('/admin/categories'); return; }
+    $name     = trim($_POST['name'] ?? '');
+    $parentId = $_POST['parent_id'] !== '' ? (int)$_POST['parent_id'] : null;
 
-        $slug = StringHelper::uniqueSlug($name, fn($s) => (bool)$this->category->findBySlug($s));
+    if (!$name) { $this->redirect('/admin/categories'); return; }
 
-        $this->category->create([
-            'name' => $name,
-            'slug' => $slug,
-            'icon' => trim($_POST['icon'] ?? 'ti-folder'),
-        ]);
+    $slug = StringHelper::uniqueSlug($name, fn($s) => (bool)$this->category->findBySlug($s));
 
-        $this->redirect('/admin/categories');
-    }
+    $data = [
+        'name' => $name,
+        'slug' => $slug,
+        'icon' => trim($_POST['icon'] ?? 'ti-folder'),
+    ];
+    if ($parentId !== null) $data['parent_id'] = $parentId;
 
-    public function update(): void {
-        $id = (int)$_POST['id'];
-        $this->category->update($id, [
-            'name' => trim($_POST['name']),
-            'icon' => trim($_POST['icon'] ?? 'ti-folder'),
-        ]);
-        $this->redirect('/admin/categories');
-    }
+    $this->category->create($data);
+    $this->redirect('/admin/categories');
+}
 
-    public function destroy(): void {
-        $id = (int)$_POST['id'];
-        $this->category->delete($id);
+public function update(): void {
+    $id       = (int)$_POST['id'];
+    $parentId = $_POST['parent_id'] !== '' ? (int)$_POST['parent_id'] : null;
+
+    $data = [
+        'name'      => trim($_POST['name']),
+        'icon'      => trim($_POST['icon'] ?? 'ti-folder'),
+        'parent_id' => $parentId,
+    ];
+
+    $this->category->update($id, $data);
+    $this->redirect('/admin/categories');
+}
+
+public function destroy(): void {
+        // Mengambil ID dari database, sesuaikan dengan cara form/URL kamu mengirimkan datanya
+        // Jika dikirim via POST form (seperti update)
+        $id = (int)($_POST['id'] ?? 0); 
+
+        if ($id > 0) {
+            $this->category->delete($id); 
+        }
+
         $this->redirect('/admin/categories');
     }
 }

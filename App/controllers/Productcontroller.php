@@ -15,24 +15,33 @@ class ProductController extends BaseController {
 
     // GET /shop
     public function shop(): void {
-        $keyword     = trim($_GET['q'] ?? '');
+        $keyword      = trim($_GET['q'] ?? '');
         $categorySlug = trim($_GET['category'] ?? '');
-        $categories  = $this->category->all();
+        $categories   = $this->category->allGrouped();
 
         if ($keyword !== '') {
             $products = $this->product->search($keyword);
         } elseif ($categorySlug !== '') {
             $cat = $this->category->findBySlug($categorySlug);
-            $products = $cat ? $this->product->byCategory($cat['id']) : [];
+
+            if ($cat) {
+                if ($cat['parent_id'] === null) {
+                    $products = $this->product->byParentCategory($cat['id']);
+                } else {
+                    $products = $this->product->byCategory($cat['id']);
+                }
+            } else {
+                $products = [];
+            }
         } else {
             $products = $this->product->published(40, 0);
         }
 
         $this->view('frontend/shop', [
-            'title'      => 'Shop — Mizu Design',
-            'products'   => $products,
-            'categories' => $categories,
-            'keyword'    => $keyword,
+            'title'          => 'Shop — Mizu Design',
+            'products'       => $products,
+            'categories'     => $categories,
+            'keyword'        => $keyword,
             'activeCategory' => $categorySlug,
         ]);
     }

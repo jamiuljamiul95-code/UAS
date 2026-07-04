@@ -24,8 +24,22 @@ require ROOT . '/app/views/admin/partials/admin-header.php';
         <label>Kategori</label>
         <select name="category_id" class="form-select" required>
           <option value="">— Pilih Kategori —</option>
-          <?php foreach ($categories as $cat): ?>
-            <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+          <?php foreach ($categoriesGrouped as $parent): ?>
+            <?php if (!empty($parent['children'])): ?>
+              <optgroup label="── <?= htmlspecialchars($parent['name']) ?>">
+                <?php foreach ($parent['children'] as $child): ?>
+                  <option value="<?= $child['id'] ?>"
+                    <?= isset($product) && $product['category_id'] == $child['id'] ? 'selected' : '' ?>>
+                    ├ <?= htmlspecialchars($child['name']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </optgroup>
+            <?php else: ?>
+              <option value="<?= $parent['id'] ?>"
+                <?= isset($product) && $product['category_id'] == $parent['id'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($parent['name']) ?>
+              </option>
+            <?php endif; ?>
           <?php endforeach; ?>
         </select>
       </div>

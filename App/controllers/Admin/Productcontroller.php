@@ -24,8 +24,10 @@ class ProductController extends BaseController {
 
     // GET /admin/products/create
     public function createForm(): void {
-        $categories = $this->category->all();
-        $this->view('admin/products/create', ['categories' => $categories]);
+    $categoriesGrouped = $this->category->allGrouped();
+    $this->view('admin/products/create', [
+        'categoriesGrouped' => $categoriesGrouped
+    ]);
     }
 
     // POST /admin/products
@@ -65,14 +67,16 @@ class ProductController extends BaseController {
 
     // GET /admin/products/edit?id=1
     public function editForm(): void {
-        $id = (int)($_GET['id'] ?? 0);
-        $product = $this->product->find($id);
-        if (!$product) { http_response_code(404); die('Produk tidak ditemukan.'); }
+    $id = (int)($_GET['id'] ?? 0);
+    $product = $this->product->find($id);
+    if (!$product) { http_response_code(404); die('Produk tidak ditemukan.'); }
 
-        $categories = $this->category->all();
-        $this->view('admin/products/edit', ['product' => $product, 'categories' => $categories]);
+    $categoriesGrouped = $this->category->allGrouped();
+    $this->view('admin/products/edit', [
+        'product'           => $product,
+        'categoriesGrouped' => $categoriesGrouped
+    ]);
     }
-
     // POST /admin/products/update
     public function update(): void {
         $id = (int)$_POST['id'];

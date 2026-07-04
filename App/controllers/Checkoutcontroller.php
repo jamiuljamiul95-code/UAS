@@ -52,6 +52,12 @@ class CheckoutController extends BaseController {
                 : $item['price'];
             $this->order->addItem($orderId, $item['id'], $price);
         }
+        $notif = new \App\models\Notification();
+        $notif->push(null, 'order',
+            'Order Baru Masuk',
+            'Invoice ' . $invoice . ' — Rp ' . number_format($total, 0, ',', '.'),
+            '/admin/orders/detail?id=' . $orderId
+        );
 
         // Cart & kupon dibersihkan setelah order dibuat
         CartHelper::clear();
@@ -60,6 +66,8 @@ class CheckoutController extends BaseController {
         // Minggu 6: di sini nanti kita panggil Midtrans Snap API
         // dan redirect ke halaman pembayaran, bukan langsung ke 'sukses'.
         $this->redirect('/checkout/pending?invoice=' . $invoice);
+
+        
     }
 
     // GET /checkout/pending — placeholder sebelum Midtrans terpasang
@@ -90,4 +98,6 @@ class CheckoutController extends BaseController {
 
         return [$subtotal, $couponDiscount, $subtotal - $couponDiscount];
     }
+
+    
 }
