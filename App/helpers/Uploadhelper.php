@@ -41,7 +41,25 @@ class UploadHelper {
         if (!move_uploaded_file($file['tmp_name'], $destination)) {
             throw new \Exception("Gagal menyimpan file.");
         }
-
         return $isPrivate ? "storage/products/$filename" : "$filename";
+    }
+
+
+    public static function uploadVideo(array $file): ?string {
+    $allowed = ['mp4', 'webm', 'mov'];
+    $maxSize = 100 * 1024 * 1024; // 100MB
+    $targetDir = ROOT . '/public/assets/videos/products';
+
+    if (empty($file['name']) || $file['error'] !== UPLOAD_ERR_OK) return null;
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed)) throw new \Exception("Format video .$ext tidak didukung.");
+    if ($file['size'] > $maxSize) throw new \Exception("Video maksimal 100MB.");
+
+    if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+
+    $filename = bin2hex(random_bytes(16)) . '.' . $ext;
+    move_uploaded_file($file['tmp_name'], "$targetDir/$filename");
+    return $filename;
     }
 }

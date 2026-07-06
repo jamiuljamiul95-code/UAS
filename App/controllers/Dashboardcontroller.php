@@ -84,16 +84,22 @@ class DashboardController extends BaseController {
         }
 
         $this->user->updateProfile($userId, [
-            'name'  => $name,
-            'email' => $email,
-            'photo' => $photo,
+        'name'  => $name,
+        'email' => $email,
+        'photo' => $photo,
         ]);
 
-        $_SESSION['user_name'] = $name;
+        // Update session agar header langsung ikut berubah
+        $_SESSION['user_name']  = $name;
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_photo'] = $photo;
+
+        // Ambil ulang data terbaru dari database
+        $user = $this->user->find($userId);
 
         $this->view('frontend/dashboard/profile', [
             'title'   => 'Profil Saya',
-            'user'    => $this->user->find($userId),
+            'user'    => $user,
             'success' => 'Profil berhasil diperbarui.',
         ]);
     }
@@ -181,4 +187,17 @@ class DashboardController extends BaseController {
             'downloads' => $downloads,
         ]);
     }
+    // POST /dashboard/orders/hide
+public function hideOrder(): void {
+    $id = (int)($_POST['id'] ?? 0);
+    $this->order->hideFromUser($id, $_SESSION['user_id']);
+    $this->redirect('/dashboard/orders');
+}
+
+// POST /dashboard/downloads/hide
+public function hideDownload(): void {
+    $id = (int)($_POST['id'] ?? 0);
+    $this->download->hideFromUser($id, $_SESSION['user_id']);
+    $this->redirect('/dashboard/downloads');
+}
 }

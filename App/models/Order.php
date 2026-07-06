@@ -67,7 +67,7 @@ class Order extends BaseModel {
      */
     public function byUser(int $userId): array {
         $stmt = $this->db->prepare("
-            SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC
+            SELECT * FROM orders WHERE user_id = ? AND is_hidden = 0 ORDER BY created_at DESC
         ");
         $stmt->execute([$userId]);
         return $stmt->fetchAll();
@@ -88,4 +88,12 @@ class Order extends BaseModel {
 
         return $order;
     }
+
+public function hideFromUser(int $id, int $userId): bool {
+    $stmt = $this->db->prepare("
+        UPDATE orders SET is_hidden = 1 
+        WHERE id = ? AND user_id = ?
+    ");
+    return $stmt->execute([$id, $userId]);
+}
 }

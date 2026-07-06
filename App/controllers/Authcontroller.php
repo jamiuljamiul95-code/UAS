@@ -38,10 +38,11 @@ class AuthController extends BaseController {
             return;
         }
 
-        $_SESSION['user_id']   = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_role'] = $user['role'];
-
+        $_SESSION['user_id']    = $user['id'];
+        $_SESSION['user_name']  = $user['name'];
+        $_SESSION['user_role']  = $user['role'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_photo'] = $user['photo'] ?? null;
         // BASE_URL otomatis ditambahkan oleh redirect() di BaseController
         $this->redirect($user['role'] === 'admin' ? '/admin/dashboard' : '/');
     }
@@ -95,6 +96,8 @@ class AuthController extends BaseController {
         $_SESSION['user_id']   = $id;
         $_SESSION['user_name'] = $name;
         $_SESSION['user_role'] = 'customer';
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_photo'] = null;
 
         $this->redirect('/');
     }

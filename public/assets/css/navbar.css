@@ -294,3 +294,91 @@
   color: #9ca3af;
   font-size: 13px;
 }
+
+/* ===== USER BUTTON ===== */
+
+.btn-nav-user {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 6px 14px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.25s;
+  font-weight: 600;
+}
+
+.btn-nav-user:hover {
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+  transform: translateY(-1px);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.user-name {
+  color: #1f2937;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Hilangkan garis bawah pada icon navbar */
+.nav-icon-link {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.nav-icon-link:hover,
+.nav-icon-link:focus,
+.nav-icon-link:active {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* ==========================
+   LOGO
+========================== */
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.brand-logo:hover .navbar-logo {
+  transform: scale(1.04);
+}
+
+@media (max-width: 992px) {
+  .navbar-logo {
+    height: 60px;
+  }
+}

@@ -33,15 +33,23 @@ class Download extends BaseModel {
      * Dipakai di halaman Dashboard > Download.
      */
     public function byUser(int $userId): array {
-        $stmt = $this->db->prepare("
-            SELECT d.*, p.title AS product_title, p.thumbnail, o.invoice
-            FROM downloads d
-            JOIN products p ON p.id = d.product_id
-            JOIN orders o ON o.id = d.order_id
-            WHERE d.user_id = ?
-            ORDER BY d.created_at DESC
-        ");
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll();
-    }
+    $stmt = $this->db->prepare("
+        SELECT d.*, p.title AS product_title, p.thumbnail, o.invoice
+        FROM downloads d
+        JOIN products p ON p.id = d.product_id
+        JOIN orders o ON o.id = d.order_id
+        WHERE d.user_id = ? AND d.is_hidden = 0
+        ORDER BY d.created_at DESC
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll();
+}
+
+public function hideFromUser(int $id, int $userId): bool {
+    $stmt = $this->db->prepare("
+        UPDATE downloads SET is_hidden = 1 
+        WHERE id = ? AND user_id = ?
+    ");
+    return $stmt->execute([$id, $userId]);
+}
 }

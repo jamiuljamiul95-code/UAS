@@ -58,6 +58,13 @@ class CheckoutController extends BaseController {
             'Invoice ' . $invoice . ' — Rp ' . number_format($total, 0, ',', '.'),
             '/admin/orders/detail?id=' . $orderId
         );
+        // TAMBAHKAN INI ↓
+        $notif->push($_SESSION['user_id'], 'order',
+            'Pesanan Berhasil Dibuat!',
+            'Invoice ' . $invoice . ' senilai Rp ' . number_format($total, 0, ',', '.') . ' sedang menunggu pembayaran.',
+            '/dashboard/orders'
+        );
+
 
         // Cart & kupon dibersihkan setelah order dibuat
         CartHelper::clear();

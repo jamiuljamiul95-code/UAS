@@ -26,21 +26,17 @@ use App\controllers\Admin\CategoryController as AdminCategoryController;
 use App\controllers\Admin\OrderController as AdminOrderController;
 use App\controllers\Admin\UserController as AdminUserController;
 
-// ====== WEBHOOK (harus di luar middleware, dipanggil server Midtrans bukan browser) ======
-if ($uri === 'webhook/midtrans' && $method === 'POST') {
-    (new WebhookController())->midtrans();
-    exit;
-}
+
 
 // ====== AUTH ======
 if (in_array($uri, ['login', 'register', 'logout'])) {
     $auth = new AuthController();
     match (true) {
-        $uri === 'login'    && $method === 'GET'  => $auth->loginForm(),
-        $uri === 'login'    && $method === 'POST' => $auth->login(),
-        $uri === 'register' && $method === 'GET'  => $auth->registerForm(),
+        $uri === 'login' && $method === 'GET' => $auth->loginForm(),
+        $uri === 'login' && $method === 'POST' => $auth->login(),
+        $uri === 'register' && $method === 'GET' => $auth->registerForm(),
         $uri === 'register' && $method === 'POST' => $auth->register(),
-        $uri === 'logout'                         => $auth->logout(),
+        $uri === 'logout' => $auth->logout(),
     };
     exit;
 }
@@ -48,40 +44,49 @@ if (in_array($uri, ['login', 'register', 'logout'])) {
 // ====== ADMIN (semua butuh login + role admin) ======
 if (str_starts_with($uri, 'admin')) {
     AuthMiddleware::adminOnly();
+    // Tandai semua notif admin sudah dibaca
+    if ($uri === 'admin/notifications/read-all') {
+        $n = new \App\models\Notification();
+        $n->markAllRead(null);
+        header('Location: ' . BASE_URL . '/admin/dashboard');
+        exit;
+    }
 
-    $adminCtrl    = new AdminController();
-    $productCtrl  = new AdminProductController();
+    $adminCtrl = new AdminController();
+    $productCtrl = new AdminProductController();
     $categoryCtrl = new AdminCategoryController();
-    $orderCtrl    = new AdminOrderController();
-    $userCtrl     = new AdminUserController();
+    $orderCtrl = new AdminOrderController();
+    $userCtrl = new AdminUserController();
 
     match (true) {
         $uri === 'admin/dashboard' && $method === 'GET' => $adminCtrl->dashboard(),
 
-        $uri === 'admin/products'        && $method === 'GET'  => $productCtrl->index(),
-        $uri === 'admin/products/create' && $method === 'GET'  => $productCtrl->createForm(),
-        $uri === 'admin/products'        && $method === 'POST' => $productCtrl->store(),
-        $uri === 'admin/products/edit'   && $method === 'GET'  => $productCtrl->editForm(),
+        $uri === 'admin/products' && $method === 'GET' => $productCtrl->index(),
+        $uri === 'admin/products/create' && $method === 'GET' => $productCtrl->createForm(),
+        $uri === 'admin/products' && $method === 'POST' => $productCtrl->store(),
+        $uri === 'admin/products/edit' && $method === 'GET' => $productCtrl->editForm(),
         $uri === 'admin/products/update' && $method === 'POST' => $productCtrl->update(),
         $uri === 'admin/products/delete' && $method === 'POST' => $productCtrl->destroy(),
 
-        $uri === 'admin/categories'        && $method === 'GET'  => $categoryCtrl->index(),
-        $uri === 'admin/categories'        && $method === 'POST' => $categoryCtrl->store(),
+        $uri === 'admin/categories' && $method === 'GET' => $categoryCtrl->index(),
+        $uri === 'admin/categories' && $method === 'POST' => $categoryCtrl->store(),
         $uri === 'admin/categories/update' && $method === 'POST' => $categoryCtrl->update(),
         $uri === 'admin/categories/delete' && $method === 'POST' => $categoryCtrl->destroy(),
 
-        $uri === 'admin/orders'               && $method === 'GET'  => $orderCtrl->index(),
-        $uri === 'admin/orders/detail'         && $method === 'GET'  => $orderCtrl->detail(),
-        $uri === 'admin/orders/update-status'  && $method === 'POST' => $orderCtrl->updateStatus(),
+        $uri === 'admin/orders' && $method === 'GET' => $orderCtrl->index(),
+        $uri === 'admin/orders/detail' && $method === 'GET' => $orderCtrl->detail(),
+        $uri === 'admin/orders/update-status' && $method === 'POST' => $orderCtrl->updateStatus(),
 
-        $uri === 'admin/users'                && $method === 'GET'  => $userCtrl->index(),
-        $uri === 'admin/users/toggle-status'  && $method === 'POST' => $userCtrl->toggleStatus(),
-        $uri === 'admin/users/delete'          && $method === 'POST' => $userCtrl->destroy(),
+        $uri === 'admin/users' && $method === 'GET' => $userCtrl->index(),
+        $uri === 'admin/users/toggle-status' && $method === 'POST' => $userCtrl->toggleStatus(),
+        $uri === 'admin/users/delete' && $method === 'POST' => $userCtrl->destroy(),
+
+        $uri === 'admin/products/media/delete' && $method === 'POST' => $productCtrl->deleteMedia(),
 
         default => (function () {
-            http_response_code(404);
-            die('404 — Halaman admin tidak ditemukan.');
-        })()
+                http_response_code(404);
+                die('404 — Halaman admin tidak ditemukan.');
+            })()
     };
     exit;
 }
@@ -93,57 +98,74 @@ if (str_starts_with($uri, 'dashboard')) {
     $dashboardCtrl = new DashboardController();
 
     match (true) {
-        $uri === 'dashboard'                  && $method === 'GET'  => $dashboardCtrl->index(),
-        $uri === 'dashboard/profile'          && $method === 'GET'  => $dashboardCtrl->profile(),
-        $uri === 'dashboard/profile/update'   && $method === 'POST' => $dashboardCtrl->updateProfile(),
-        $uri === 'dashboard/password/update'  && $method === 'POST' => $dashboardCtrl->updatePassword(),
-        $uri === 'dashboard/orders'           && $method === 'GET'  => $dashboardCtrl->orders(),
-        $uri === 'dashboard/orders/detail'    && $method === 'GET'  => $dashboardCtrl->orderDetail(),
-        $uri === 'dashboard/downloads'        && $method === 'GET'  => $dashboardCtrl->downloads(),
+        $uri === 'dashboard' && $method === 'GET' => $dashboardCtrl->index(),
+        $uri === 'dashboard/profile' && $method === 'GET' => $dashboardCtrl->profile(),
+        $uri === 'dashboard/profile/update' && $method === 'POST' => $dashboardCtrl->updateProfile(),
+        $uri === 'dashboard/password/update' && $method === 'POST' => $dashboardCtrl->updatePassword(),
+        $uri === 'dashboard/orders' && $method === 'GET' => $dashboardCtrl->orders(),
+        $uri === 'dashboard/orders/detail' && $method === 'GET' => $dashboardCtrl->orderDetail(),
+        $uri === 'dashboard/downloads' && $method === 'GET' => $dashboardCtrl->downloads(),
+        $uri === 'dashboard/orders/hide' && $method === 'POST' => $dashboardCtrl->hideOrder(),
+        $uri === 'dashboard/downloads/hide' && $method === 'POST' => $dashboardCtrl->hideDownload(),
 
         default => (function () {
-            http_response_code(404);
-            die('404 — Halaman dashboard tidak ditemukan.');
-        })()
+                http_response_code(404);
+                die('404 — Halaman dashboard tidak ditemukan.');
+            })()
     };
     exit;
 }
 
+
+// ====== CUSTOMER NOTIFICATION ======
+if ($uri === 'notifications/read-all' && isset($_SESSION['user_id'])) {
+    AuthMiddleware::check();
+
+    $n = new \App\models\Notification();
+    $n->markAllRead($_SESSION['user_id']);
+
+    header('Location: ' . BASE_URL . '/');
+    exit;
+}
+
+
 // ====== FRONTEND ======
-$home        = new HomeController();
+$home = new HomeController();
 $productCtrl = new ProductController();
-$cartCtrl    = new CartController();
+$cartCtrl = new CartController();
 $checkoutCtrl = new CheckoutController();
 $wishlistCtrl = new WishlistController();
 $downloadCtrl = new DownloadController();
 match (true) {
-    $uri === ''                       => $home->index(),
-    $uri === 'shop'                   => $productCtrl->shop(),
+    $uri === '' => $home->index(),
+    $uri === 'shop' => $productCtrl->shop(),
     str_starts_with($uri, 'product/') => $productCtrl->detail(substr($uri, 8)),
 
-    $uri === 'cart'        && $method === 'GET'  => $cartCtrl->index(),
-    $uri === 'cart/add'    && $method === 'POST' => $cartCtrl->add(),
+    $uri === 'cart' && $method === 'GET' => $cartCtrl->index(),
+    $uri === 'cart/add' && $method === 'POST' => $cartCtrl->add(),
     $uri === 'cart/remove' && $method === 'POST' => $cartCtrl->remove(),
     $uri === 'cart/coupon' && $method === 'POST' => $cartCtrl->applyCoupon(),
 
-    $uri === 'checkout'         && $method === 'GET'  => $checkoutCtrl->index(),
-    $uri === 'checkout'         && $method === 'POST' => $checkoutCtrl->process(),
-    $uri === 'checkout/pending' && $method === 'GET'  => $checkoutCtrl->pending(),
+    $uri === 'checkout' && $method === 'GET' => $checkoutCtrl->index(),
+    $uri === 'checkout' && $method === 'POST' => $checkoutCtrl->process(),
+    $uri === 'checkout/pending' && $method === 'GET' => $checkoutCtrl->pending(),
 
 
-    $uri === 'wishlist'     && $method === 'GET'  => $wishlistCtrl->index(),
+    $uri === 'wishlist' && $method === 'GET' => $wishlistCtrl->index(),
     $uri === 'wishlist/add' && $method === 'POST' => $wishlistCtrl->add(),
 
     str_starts_with($uri, 'download/') => $downloadCtrl->serve(substr($uri, 9)),
 
     default => (function () {
-        http_response_code(404);
-        die('404 — Halaman tidak ditemukan.');
-    })()
+            http_response_code(404);
+            die('404 — Halaman tidak ditemukan.');
+        })()
 };
 
 // Tandai semua notif dibaca - admin
 if ($uri === 'admin/notifications/read-all') {
+    AuthMiddleware::check();
+
     $n = new \App\models\Notification();
     $n->markAllRead(null);
     $this->redirect('/admin/dashboard');

@@ -75,5 +75,11 @@ class CartController extends BaseController {
 
         $_SESSION['coupon'] = $coupon;
         $this->redirect('/cart');
+        
+    }
+    // POST /cart/clear
+    public function clear(): void {
+        CartHelper::clear();
+        $this->redirect('/cart');
     }
 }

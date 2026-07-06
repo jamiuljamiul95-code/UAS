@@ -48,12 +48,15 @@ class ProductController extends BaseController {
 
     // GET /product/{slug}
     public function detail(string $slug): void {
-        $product = $this->product->findBySlug($slug);
-        if (!$product) { http_response_code(404); die('Produk tidak ditemukan.'); }
+    $product = $this->product->findBySlug($slug);
+    if (!$product) { http_response_code(404); die('Produk tidak ditemukan.'); }
 
-        $this->view('frontend/product-detail', [
-            'title'   => $product['title'] . ' — Mizu Design',
-            'product' => $product,
-        ]);
+    $media = $this->product->getMedia($product['id']); // ← tambahkan ini
+
+    $this->view('frontend/product-detail', [
+        'title'   => $product['title'] . ' — Mizu Design',
+        'product' => $product,
+        'media'   => $media, // ← tambahkan ini
+    ]);
     }
 }

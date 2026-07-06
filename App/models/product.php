@@ -101,4 +101,27 @@ class Product extends BaseModel {
         $stmt->execute([$parentId, $parentId]);
         return $stmt->fetchAll();
     }
+
+    public function getMedia(int $productId): array {
+    $stmt = $this->db->prepare("
+        SELECT * FROM product_media 
+        WHERE product_id = ? 
+        ORDER BY sort_order ASC, id ASC
+    ");
+    $stmt->execute([$productId]);
+    return $stmt->fetchAll();
+    }
+    
+    public function addMedia(int $productId, string $type, string $filePath, int $order = 0): void {
+        $stmt = $this->db->prepare("
+            INSERT INTO product_media (product_id, type, file_path, sort_order) 
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$productId, $type, $filePath, $order]);
+    }
+    
+    public function deleteMedia(int $mediaId): void {
+        $stmt = $this->db->prepare("DELETE FROM product_media WHERE id = ?");
+        $stmt->execute([$mediaId]);
+    }
 }
