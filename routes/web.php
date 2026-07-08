@@ -44,6 +44,7 @@ if (in_array($uri, ['login', 'register', 'logout'])) {
 // ====== ADMIN (semua butuh login + role admin) ======
 if (str_starts_with($uri, 'admin')) {
     AuthMiddleware::adminOnly();
+
     // Tandai semua notif admin sudah dibaca
     if ($uri === 'admin/notifications/read-all') {
         $n = new \App\models\Notification();
@@ -107,6 +108,7 @@ if (str_starts_with($uri, 'dashboard')) {
         $uri === 'dashboard/downloads' && $method === 'GET' => $dashboardCtrl->downloads(),
         $uri === 'dashboard/orders/hide' && $method === 'POST' => $dashboardCtrl->hideOrder(),
         $uri === 'dashboard/downloads/hide' && $method === 'POST' => $dashboardCtrl->hideDownload(),
+        $uri === 'dashboard/downloads/hide-expired' && $method === 'POST' => $dashboardCtrl->hideAllExpiredDownloads(),
 
         default => (function () {
                 http_response_code(404);
@@ -125,6 +127,25 @@ if ($uri === 'notifications/read-all' && isset($_SESSION['user_id'])) {
     $n->markAllRead($_SESSION['user_id']);
 
     header('Location: ' . BASE_URL . '/');
+    exit;
+}
+
+if ($uri === 'notifications/delete' && $method === 'POST' && isset($_SESSION['user_id'])) {
+    AuthMiddleware::check();
+
+    $id = (int) ($_POST['id'] ?? 0);
+    $n = new \App\models\Notification();
+    $n->deleteOne($id, $_SESSION['user_id']);
+
+    exit; // fetch() tidak butuh redirect/isi respons
+}
+
+if ($uri === 'notifications/delete-all' && $method === 'POST' && isset($_SESSION['user_id'])) {
+    AuthMiddleware::check();
+
+    $n = new \App\models\Notification();
+    $n->deleteAllForUser($_SESSION['user_id']);
+
     exit;
 }
 
@@ -161,21 +182,3 @@ match (true) {
             die('404 — Halaman tidak ditemukan.');
         })()
 };
-
-// Tandai semua notif dibaca - admin
-if ($uri === 'admin/notifications/read-all') {
-    AuthMiddleware::check();
-
-    $n = new \App\models\Notification();
-    $n->markAllRead(null);
-    $this->redirect('/admin/dashboard');
-    exit;
-}
-
-// Tandai semua notif dibaca - customer
-if ($uri === 'notifications/read-all' && isset($_SESSION['user_id'])) {
-    $n = new \App\models\Notification();
-    $n->markAllRead($_SESSION['user_id']);
-    header('Location: ' . BASE_URL . '/');
-    exit;
-}

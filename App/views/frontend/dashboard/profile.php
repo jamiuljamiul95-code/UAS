@@ -32,18 +32,19 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label>Nama Lengkap</label>
-                  <input type="text" name="name" class="form-control"
-                         value="<?= htmlspecialchars($user['name']) ?>" required>
+                  <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($user['name']) ?>"
+                    required>
                 </div>
                 <div class="col-md-6">
                   <label>Email</label>
-                  <input type="email" name="email" class="form-control"
-                         value="<?= htmlspecialchars($user['email']) ?>" required>
+                  <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>"
+                    required>
                 </div>
                 <div class="col-md-6">
                   <label>Foto Profil</label>
                   <input type="file" name="photo" accept=".jpg,.jpeg,.png,.webp" class="form-control">
-                  <small class="text-secondary">JPG/PNG/WEBP, maks 2MB. Kosongkan jika tidak ingin mengubah.</small>
+                  <small class="text-secondary">JPG/PNG/WEBP, maks 2MB. Kosongkan jika tidak ingin
+                    mengubah.</small>
                 </div>
               </div>
               <div class="mt-3">
@@ -59,18 +60,17 @@
               <div class="row g-3">
                 <div class="col-md-4">
                   <label>Password Lama</label>
-                  <input type="password" name="current_password" class="form-control"
-                         placeholder="••••••••" required>
+                  <input type="password" name="current_password" class="form-control" placeholder="••••••••" required>
                 </div>
                 <div class="col-md-4">
                   <label>Password Baru</label>
-                  <input type="password" name="new_password" class="form-control"
-                         placeholder="Min. 8 karakter" required>
+                  <input type="password" name="new_password" class="form-control" placeholder="Min. 8 karakter"
+                    required>
                 </div>
                 <div class="col-md-4">
                   <label>Konfirmasi Password Baru</label>
-                  <input type="password" name="confirm_password" class="form-control"
-                         placeholder="Ulangi password baru" required>
+                  <input type="password" name="confirm_password" class="form-control" placeholder="Ulangi password baru"
+                    required>
                 </div>
               </div>
               <div class="mt-3">

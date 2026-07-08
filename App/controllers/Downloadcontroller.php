@@ -4,14 +4,17 @@ namespace App\controllers;
 use App\models\Download;
 use App\middleware\AuthMiddleware;
 
-class DownloadController extends BaseController {
+class DownloadController extends BaseController
+{
     private Download $download;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->download = new Download();
     }
 
-    public function serve(string $token): void {
+    public function serve(string $token): void
+    {
         AuthMiddleware::check();
 
         $dl = $this->download->findByToken($token);
@@ -21,7 +24,7 @@ class DownloadController extends BaseController {
             die('Link download tidak valid.');
         }
 
-        if ((int)$dl['user_id'] !== (int)$_SESSION['user_id']) {
+        if ((int) $dl['user_id'] !== (int) $_SESSION['user_id']) {
             http_response_code(403);
             die('Akses ditolak.');
         }

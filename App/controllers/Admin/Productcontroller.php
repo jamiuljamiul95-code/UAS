@@ -117,6 +117,7 @@ class ProductController extends BaseController
             return;
         }
     }
+
     /**
      * GET /admin/products/edit?id=1
      */
@@ -133,9 +134,13 @@ class ProductController extends BaseController
 
         $categoriesGrouped = $this->category->allGrouped();
 
+        // Ambil semua media (foto & video) milik produk ini
+        $media = $this->product->getMedia($id);
+
         $this->view('admin/products/edit', [
             'product' => $product,
-            'categoriesGrouped' => $categoriesGrouped
+            'categoriesGrouped' => $categoriesGrouped,
+            'media' => $media
         ]);
     }
 
@@ -249,11 +254,16 @@ class ProductController extends BaseController
 
             $categoriesGrouped = $this->category->allGrouped();
 
+            // Ambil media lagi supaya galeri tetap tampil saat form gagal disubmit
+            $media = $this->product->getMedia($id);
+
             $this->view('admin/products/edit', [
 
                 'product' => $product,
 
                 'categoriesGrouped' => $categoriesGrouped,
+
+                'media' => $media,
 
                 'error' => $e->getMessage()
 
@@ -262,6 +272,7 @@ class ProductController extends BaseController
             return;
         }
     }
+
     /**
      * POST /admin/products/delete
      */

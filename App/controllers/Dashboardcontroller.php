@@ -5,42 +5,47 @@ use App\models\User;
 use App\models\Order;
 use App\models\Download;
 
-class DashboardController extends BaseController {
+class DashboardController extends BaseController
+{
     private User $user;
     private Order $order;
     private Download $download;
 
-    public function __construct() {
-        $this->user     = new User();
-        $this->order    = new Order();
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->order = new Order();
         $this->download = new Download();
     }
 
     // GET /dashboard -> alias ke profil
-    public function index(): void {
+    public function index(): void
+    {
         $this->redirect('/dashboard/profile');
     }
 
     // GET /dashboard/profile
-    public function profile(): void {
+    public function profile(): void
+    {
         $user = $this->user->find($_SESSION['user_id']);
 
         $this->view('frontend/dashboard/profile', [
             'title' => 'Profil Saya',
-            'user'  => $user,
+            'user' => $user,
         ]);
     }
 
     // POST /dashboard/profile/update
-    public function updateProfile(): void {
+    public function updateProfile(): void
+    {
         $userId = $_SESSION['user_id'];
-        $name   = trim($_POST['name'] ?? '');
-        $email  = trim($_POST['email'] ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
 
         if (!$name || !$email) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
-                'user'  => $this->user->find($userId),
+                'user' => $this->user->find($userId),
                 'error' => 'Nama dan email wajib diisi.',
             ]);
             return;
@@ -49,7 +54,7 @@ class DashboardController extends BaseController {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
-                'user'  => $this->user->find($userId),
+                'user' => $this->user->find($userId),
                 'error' => 'Format email tidak valid.',
             ]);
             return;
@@ -57,10 +62,10 @@ class DashboardController extends BaseController {
 
         // Kalau email diganti, pastikan belum dipakai user lain
         $existing = $this->user->findByEmail($email);
-        if ($existing && (int)$existing['id'] !== (int)$userId) {
+        if ($existing && (int) $existing['id'] !== (int) $userId) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
-                'user'  => $this->user->find($userId),
+                'user' => $this->user->find($userId),
                 'error' => 'Email sudah dipakai akun lain.',
             ]);
             return;
@@ -72,11 +77,12 @@ class DashboardController extends BaseController {
         if (!empty($_FILES['photo']['name'])) {
             try {
                 $uploaded = \App\helpers\UploadHelper::uploadImage($_FILES['photo'], 'avatars');
-                if ($uploaded) $photo = $uploaded;
+                if ($uploaded)
+                    $photo = $uploaded;
             } catch (\Exception $e) {
                 $this->view('frontend/dashboard/profile', [
                     'title' => 'Profil Saya',
-                    'user'  => $this->user->find($userId),
+                    'user' => $this->user->find($userId),
                     'error' => $e->getMessage(),
                 ]);
                 return;
@@ -84,13 +90,13 @@ class DashboardController extends BaseController {
         }
 
         $this->user->updateProfile($userId, [
-        'name'  => $name,
-        'email' => $email,
-        'photo' => $photo,
+            'name' => $name,
+            'email' => $email,
+            'photo' => $photo,
         ]);
 
         // Update session agar header langsung ikut berubah
-        $_SESSION['user_name']  = $name;
+        $_SESSION['user_name'] = $name;
         $_SESSION['user_email'] = $email;
         $_SESSION['user_photo'] = $photo;
 
@@ -98,25 +104,26 @@ class DashboardController extends BaseController {
         $user = $this->user->find($userId);
 
         $this->view('frontend/dashboard/profile', [
-            'title'   => 'Profil Saya',
-            'user'    => $user,
+            'title' => 'Profil Saya',
+            'user' => $user,
             'success' => 'Profil berhasil diperbarui.',
         ]);
     }
 
     // POST /dashboard/password/update
-    public function updatePassword(): void {
-        $userId      = $_SESSION['user_id'];
+    public function updatePassword(): void
+    {
+        $userId = $_SESSION['user_id'];
         $oldPassword = $_POST['old_password'] ?? '';
         $newPassword = $_POST['new_password'] ?? '';
-        $confirm     = $_POST['confirm_password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
 
         $user = $this->user->find($userId);
 
         if (!$this->user->verifyPassword($oldPassword, $user['password'])) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
-                'user'  => $user,
+                'user' => $user,
                 'error' => 'Password lama salah.',
             ]);
             return;
@@ -125,7 +132,7 @@ class DashboardController extends BaseController {
         if (strlen($newPassword) < 8) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
-                'user'  => $user,
+                'user' => $user,
                 'error' => 'Password baru minimal 8 karakter.',
             ]);
             return;
@@ -134,7 +141,7 @@ class DashboardController extends BaseController {
         if ($newPassword !== $confirm) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
-                'user'  => $user,
+                'user' => $user,
                 'error' => 'Konfirmasi password baru tidak cocok.',
             ]);
             return;
@@ -143,29 +150,31 @@ class DashboardController extends BaseController {
         $this->user->updatePassword($userId, $newPassword);
 
         $this->view('frontend/dashboard/profile', [
-            'title'   => 'Profil Saya',
-            'user'    => $user,
+            'title' => 'Profil Saya',
+            'user' => $user,
             'success' => 'Password berhasil diganti.',
         ]);
     }
 
     // GET /dashboard/orders
-    public function orders(): void {
+    public function orders(): void
+    {
         $orders = $this->order->byUser($_SESSION['user_id']);
 
         $this->view('frontend/dashboard/orders', [
-            'title'  => 'Riwayat Pesanan',
+            'title' => 'Riwayat Pesanan',
             'orders' => $orders,
         ]);
     }
 
     // GET /dashboard/orders/detail?invoice=...
-    public function orderDetail(): void {
+    public function orderDetail(): void
+    {
         $invoice = $_GET['invoice'] ?? '';
-        $order   = $this->order->findByInvoice($invoice);
+        $order = $this->order->findByInvoice($invoice);
 
         // Pastikan order ini benar milik user yang sedang login
-        if (!$order || (int)$order['user_id'] !== (int)$_SESSION['user_id']) {
+        if (!$order || (int) $order['user_id'] !== (int) $_SESSION['user_id']) {
             http_response_code(404);
             die('404 — Pesanan tidak ditemukan.');
         }
@@ -179,25 +188,36 @@ class DashboardController extends BaseController {
     }
 
     // GET /dashboard/downloads
-    public function downloads(): void {
+    public function downloads(): void
+    {
         $downloads = $this->download->byUser($_SESSION['user_id']);
 
         $this->view('frontend/dashboard/downloads', [
-            'title'     => 'Download Saya',
+            'title' => 'Download Saya',
             'downloads' => $downloads,
         ]);
     }
     // POST /dashboard/orders/hide
-public function hideOrder(): void {
-    $id = (int)($_POST['id'] ?? 0);
-    $this->order->hideFromUser($id, $_SESSION['user_id']);
-    $this->redirect('/dashboard/orders');
-}
+    public function hideOrder(): void
+    {
+        $id = (int) ($_POST['id'] ?? 0);
+        $this->order->hideFromUser($id, $_SESSION['user_id']);
+        $this->redirect('/dashboard/orders');
+    }
 
-// POST /dashboard/downloads/hide
-public function hideDownload(): void {
-    $id = (int)($_POST['id'] ?? 0);
-    $this->download->hideFromUser($id, $_SESSION['user_id']);
-    $this->redirect('/dashboard/downloads');
-}
+    // POST /dashboard/downloads/hide
+    public function hideDownload(): void
+    {
+        $id = (int) ($_POST['id'] ?? 0);
+        $this->download->hideFromUser($id, $_SESSION['user_id']);
+        $this->redirect('/dashboard/downloads');
+    }
+
+    // POST /dashboard/downloads/hide-expired
+    public function hideAllExpiredDownloads(): void
+    {
+        $this->download->hideAllExpiredFromUser($_SESSION['user_id']);
+        $this->redirect('/dashboard/downloads');
+    }
+
 }

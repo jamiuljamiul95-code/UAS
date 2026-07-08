@@ -10,7 +10,7 @@ require ROOT . '/app/views/admin/partials/admin-header.php';
 
 <div class="admin-card">
     <?php if (!empty($error)): ?>
-    <div class="alert-admin-error"><?= htmlspecialchars($error) ?></div>
+        <div class="alert-admin-error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
     <form action="<?= BASE_URL ?>/admin/products" method="POST" enctype="multipart/form-data" class="admin-form">
@@ -26,21 +26,19 @@ require ROOT . '/app/views/admin/partials/admin-header.php';
                 <select name="category_id" class="form-select" required>
                     <option value="">— Pilih Kategori —</option>
                     <?php foreach ($categoriesGrouped as $parent): ?>
-                    <?php if (!empty($parent['children'])): ?>
-                    <optgroup label="── <?= htmlspecialchars($parent['name']) ?>">
-                        <?php foreach ($parent['children'] as $child): ?>
-                        <option value="<?= $child['id'] ?>"
-                            <?= isset($product) && $product['category_id'] == $child['id'] ? 'selected' : '' ?>>
-                            ├ <?= htmlspecialchars($child['name']) ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </optgroup>
-                    <?php else: ?>
-                    <option value="<?= $parent['id'] ?>"
-                        <?= isset($product) && $product['category_id'] == $parent['id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($parent['name']) ?>
-                    </option>
-                    <?php endif; ?>
+                        <?php if (!empty($parent['children'])): ?>
+                            <optgroup label="── <?= htmlspecialchars($parent['name']) ?>">
+                                <?php foreach ($parent['children'] as $child): ?>
+                                    <option value="<?= $child['id'] ?>" <?= isset($product) && $product['category_id'] == $child['id'] ? 'selected' : '' ?>>
+                                        ├ <?= htmlspecialchars($child['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        <?php else: ?>
+                            <option value="<?= $parent['id'] ?>" <?= isset($product) && $product['category_id'] == $parent['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($parent['name']) ?>
+                            </option>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -52,7 +50,7 @@ require ROOT . '/app/views/admin/partials/admin-header.php';
                 placeholder="Jelaskan produk ini, format file, jumlah halaman/varian, dll."></textarea>
         </div>
 
-        <div class="row g-3 mb-3">
+        <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <label>Harga (Rp)</label>
                 <input type="number" name="price" class="form-control" placeholder="50000" min="0" required>
@@ -70,75 +68,63 @@ require ROOT . '/app/views/admin/partials/admin-header.php';
             </div>
         </div>
 
-
-
-        <!-- Upload Multiple Media -->
-        <div class="mb-4">
-            <label class="fw-semibold mb-2 d-block">
-                <i class="ti ti-photo-plus" style="color:#2563EB"></i>
+        <!-- Galeri Foto & Video: bisa upload banyak sekaligus -->
+        <div class="media-section">
+            <div class="media-section-title">
+                <i class="ti ti-photo-plus"></i>
                 Galeri Foto & Video
+            </div>
+
+            <label class="file-drop">
+                <input type="file" name="media_images[]" accept=".jpg,.jpeg,.png,.webp" multiple>
+                <i class="ti ti-photo file-drop-icon"></i>
+                <div class="file-drop-label">Tambah Foto</div>
+                <div class="file-drop-hint">Bisa pilih banyak sekaligus — JPG/PNG/WEBP, maks 3MB per file</div>
             </label>
-            <div class="upload-box">
-                <input type="file" name="media_images[]" accept=".jpg,.jpeg,.png,.webp" multiple
-                    class="form-control mb-2">
-                <small class="text-secondary d-block mb-2">Foto tambahan (bisa pilih banyak sekaligus) — JPG/PNG/WEBP,
-                    maks 3MB per file</small>
 
-                <input type="file" name="media_videos[]" accept=".mp4,.webm,.mov" multiple class="form-control">
-                <small class="text-secondary">Video produk (opsional) — MP4/WEBM/MOV, maks 100MB per file</small>
-            </div>
-
-            <?php if (isset($product) && !empty($media)): ?>
-            <div class="mt-3">
-                <p class="small fw-semibold mb-2">Media yang sudah diupload:</p>
-                <div class="d-flex flex-wrap gap-2">
-                    <?php foreach ($media as $m): ?>
-                    <div class="position-relative">
-                        <?php if ($m['type'] === 'image'): ?>
-                        <img src="<?= BASE_URL ?>/assets/images/products/<?= $m['file_path'] ?>"
-                            style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb">
-                        <?php else: ?>
-                        <video src="<?= BASE_URL ?>/assets/videos/products/<?= $m['file_path'] ?>"
-                            style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb"></video>
-                        <?php endif; ?>
-                        <form action="<?= BASE_URL ?>/admin/products/media/delete" method="POST">
-                            <input type="hidden" name="media_id" value="<?= $m['id'] ?>">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                            <button type="submit" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;
-                             border-radius:50%;background:#dc2626;color:#fff;border:none;
-                             font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center"
-                                onclick="return confirm('Hapus media ini?')">×</button>
-                        </form>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-            <?php endif; ?>
+            <label class="file-drop">
+                <input type="file" name="media_videos[]" accept=".mp4,.webm,.mov" multiple>
+                <i class="ti ti-video file-drop-icon"></i>
+                <div class="file-drop-label">Tambah Video</div>
+                <div class="file-drop-hint">Opsional — MP4/WEBM/MOV, maks 100MB per file</div>
+            </label>
         </div>
 
+        <!-- Thumbnail, Foto Detail, File Digital -->
         <div class="row g-3 mb-4">
             <div class="col-md-4">
-                <label>Thumbnail</label>
-                <div class="upload-box">
-                    <input type="file" name="thumbnail" accept=".jpg,.jpeg,.png,.webp"
-                        class="form-control form-control-sm">
-                    <small>Gambar utama di kartu produk. JPG/PNG/WEBP, maks 3MB.</small>
+                <div class="single-file-card">
+                    <label>Thumbnail</label>
+                    <label class="file-drop">
+                        <input type="file" name="thumbnail" accept=".jpg,.jpeg,.png,.webp" required>
+                        <i class="ti ti-upload file-drop-icon"></i>
+                        <div class="file-drop-label">Pilih Thumbnail</div>
+                        <div class="file-drop-hint">Gambar utama di kartu produk. JPG/PNG/WEBP, maks 3MB.</div>
+                    </label>
                 </div>
             </div>
+
             <div class="col-md-4">
-                <label>Preview Image</label>
-                <div class="upload-box">
-                    <input type="file" name="preview_image" accept=".jpg,.jpeg,.png,.webp"
-                        class="form-control form-control-sm">
-                    <small>Gambar besar di halaman detail produk. Opsional.</small>
+                <div class="single-file-card">
+                    <label>Foto Detail</label>
+                    <label class="file-drop">
+                        <input type="file" name="preview_image" accept=".jpg,.jpeg,.png,.webp">
+                        <i class="ti ti-upload file-drop-icon"></i>
+                        <div class="file-drop-label">Pilih Foto Detail</div>
+                        <div class="file-drop-hint">Gambar besar di halaman detail produk. Opsional.</div>
+                    </label>
                 </div>
             </div>
+
             <div class="col-md-4">
-                <label>File Digital</label>
-                <div class="upload-box">
-                    <input type="file" name="file_path" accept=".zip,.rar,.pdf,.psd,.ai"
-                        class="form-control form-control-sm">
-                    <small>File yang akan didownload pembeli. ZIP/RAR/PDF/PSD/AI, maks 200MB.</small>
+                <div class="single-file-card">
+                    <label>File Digital</label>
+                    <label class="file-drop">
+                        <input type="file" name="file_path" accept=".zip,.rar,.pdf,.psd,.ai" required>
+                        <i class="ti ti-file-upload file-drop-icon"></i>
+                        <div class="file-drop-label">Pilih File Digital</div>
+                        <div class="file-drop-hint">ZIP/RAR/PDF/PSD/AI, maks 200MB.</div>
+                    </label>
                 </div>
             </div>
         </div>
