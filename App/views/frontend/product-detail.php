@@ -19,7 +19,8 @@ $finalPrice = $product['discount'] > 0
 
                     <?php if ($product['discount'] > 0): ?>
                         <span class="badge-discount-lg">
-                            -<?= (int) $product['discount'] ?>%
+                            -
+                            <?= (int) $product['discount'] ?>%
                         </span>
                     <?php endif; ?>
 
@@ -185,9 +186,7 @@ $finalPrice = $product['discount'] > 0
     function switchMedia(el) {
 
         const type = el.dataset.type;
-
         const src = el.dataset.src;
-
         const mainMedia = document.getElementById("mainMedia");
 
         document.querySelectorAll(".media-thumb")
@@ -200,53 +199,57 @@ $finalPrice = $product['discount'] > 0
 
         document.getElementById("currentSlide").innerText = index + 1;
 
+        const current = document.getElementById("mainImg");
+
         if (type === "img") {
 
-            let img = document.getElementById("mainImg");
+            // Kalau elemen yang sedang tampil BUKAN <img> (misal masih <video>),
+            // hapus dulu baru buat <img> baru. Ini fix supaya video tidak "ketuker" jadi foto.
+            if (!current || current.tagName !== "IMG") {
 
-            if (!img) {
+                current?.remove();
 
-                mainMedia.querySelector("video")?.remove();
-
-                img = document.createElement("img");
-
+                const img = document.createElement("img");
                 img.id = "mainImg";
-
                 mainMedia.prepend(img);
 
+                img.style.opacity = 0;
+
+                setTimeout(() => {
+                    img.src = src;
+                    img.style.opacity = 1;
+                }, 180);
+
+            } else {
+
+                current.style.opacity = 0;
+
+                setTimeout(() => {
+                    current.src = src;
+                    current.style.opacity = 1;
+                }, 180);
+
             }
-
-            img.style.opacity = 0;
-
-            setTimeout(() => {
-
-                img.src = src;
-
-                img.style.opacity = 1;
-
-            }, 180);
 
         } else {
 
-            document.getElementById("mainImg")?.remove();
+            // Kalau elemen yang sedang tampil BUKAN <video>, hapus dulu baru buat <video> baru.
+            if (!current || current.tagName !== "VIDEO") {
 
-            let video = mainMedia.querySelector("video");
+                current?.remove();
 
-            if (!video) {
-
-                video = document.createElement("video");
-
+                const video = document.createElement("video");
                 video.controls = true;
-
                 video.autoplay = true;
-
                 video.id = "mainImg";
-
                 mainMedia.prepend(video);
+                video.src = src;
+
+            } else {
+
+                current.src = src;
 
             }
-
-            video.src = src;
 
         }
 

@@ -20,6 +20,7 @@ use App\controllers\DashboardController;
 use App\controllers\WishlistController;
 use App\middleware\AuthMiddleware;
 use App\controllers\DownloadController;
+use App\controllers\PageController;
 use App\controllers\Admin\AdminController;
 use App\controllers\Admin\ProductController as AdminProductController;
 use App\controllers\Admin\CategoryController as AdminCategoryController;
@@ -86,7 +87,8 @@ if (str_starts_with($uri, 'admin')) {
 
         default => (function () {
                 http_response_code(404);
-                die('404 — Halaman admin tidak ditemukan.');
+                require ROOT . '/app/views/frontend/404.php';
+                exit;
             })()
     };
     exit;
@@ -112,7 +114,8 @@ if (str_starts_with($uri, 'dashboard')) {
 
         default => (function () {
                 http_response_code(404);
-                die('404 — Halaman dashboard tidak ditemukan.');
+                require ROOT . '/app/views/frontend/404.php';
+                exit;
             })()
     };
     exit;
@@ -157,8 +160,11 @@ $cartCtrl = new CartController();
 $checkoutCtrl = new CheckoutController();
 $wishlistCtrl = new WishlistController();
 $downloadCtrl = new DownloadController();
+$pageCtrl = new PageController();
 match (true) {
     $uri === '' => $home->index(),
+    $uri === 'about' => $pageCtrl->about(),
+    $uri === 'faq' => $pageCtrl->faq(),
     $uri === 'shop' => $productCtrl->shop(),
     str_starts_with($uri, 'product/') => $productCtrl->detail(substr($uri, 8)),
 
@@ -175,10 +181,13 @@ match (true) {
     $uri === 'wishlist' && $method === 'GET' => $wishlistCtrl->index(),
     $uri === 'wishlist/add' && $method === 'POST' => $wishlistCtrl->add(),
 
+
+
     str_starts_with($uri, 'download/') => $downloadCtrl->serve(substr($uri, 9)),
 
     default => (function () {
             http_response_code(404);
-            die('404 — Halaman tidak ditemukan.');
+            require ROOT . '/app/views/frontend/404.php';
+            exit;
         })()
 };

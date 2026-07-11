@@ -18,10 +18,40 @@ class DashboardController extends BaseController
         $this->download = new Download();
     }
 
-    // GET /dashboard -> alias ke profil
+    // GET /dashboard -> halaman ringkasan
     public function index(): void
     {
-        $this->redirect('/dashboard/profile');
+        $userId = $_SESSION['user_id'];
+        $user = $this->user->find($userId);
+
+        $orders = $this->order->byUser($userId);
+        $downloads = $this->download->byUser($userId);
+
+        // Hitung wishlist secara defensif -- coba beberapa nama method umum
+        $wishlistCount = 0;
+        if (class_exists('\App\models\Wishlist')) {
+            $wishlistModel = new \App\models\Wishlist();
+            if (method_exists($wishlistModel, 'byUser')) {
+                $wishlistCount = count($wishlistModel->byUser($userId));
+            } elseif (method_exists($wishlistModel, 'countByUser')) {
+                $wishlistCount = $wishlistModel->countByUser($userId);
+            } elseif (method_exists($wishlistModel, 'all')) {
+                $wishlistCount = count($wishlistModel->all($userId));
+            }
+        }
+
+        $recentOrders = array_slice($orders, 0, 3);
+        $recentDownloads = array_slice($downloads, 0, 3);
+
+        $this->view('frontend/dashboard/index', [
+            'title' => 'Dashboard',
+            'user' => $user,
+            'totalOrders' => count($orders),
+            'totalDownloads' => count($downloads),
+            'wishlistCount' => $wishlistCount,
+            'recentOrders' => $recentOrders,
+            'recentDownloads' => $recentDownloads,
+        ]);
     }
 
     // GET /dashboard/profile
@@ -197,6 +227,7 @@ class DashboardController extends BaseController
             'downloads' => $downloads,
         ]);
     }
+
     // POST /dashboard/orders/hide
     public function hideOrder(): void
     {
