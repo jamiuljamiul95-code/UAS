@@ -21,13 +21,14 @@ class DashboardController extends BaseController
     // GET /dashboard -> halaman ringkasan
     public function index(): void
     {
-        $userId = $_SESSION['user_id'];
+        // Mendukung UUID (string), jangan di-cast ke (int)
+        $userId = $_SESSION['user_id'] ?? '';
         $user = $this->user->find($userId);
 
         $orders = $this->order->byUser($userId);
         $downloads = $this->download->byUser($userId);
 
-        // Hitung wishlist secara defensif -- coba beberapa nama method umum
+        // Hitung wishlist secara defensif
         $wishlistCount = 0;
         if (class_exists('\App\models\Wishlist')) {
             $wishlistModel = new \App\models\Wishlist();
@@ -57,7 +58,8 @@ class DashboardController extends BaseController
     // GET /dashboard/profile
     public function profile(): void
     {
-        $user = $this->user->find($_SESSION['user_id']);
+        $userId = $_SESSION['user_id'] ?? '';
+        $user = $this->user->find($userId);
 
         $this->view('frontend/dashboard/profile', [
             'title' => 'Profil Saya',
@@ -68,7 +70,7 @@ class DashboardController extends BaseController
     // POST /dashboard/profile/update
     public function updateProfile(): void
     {
-        $userId = $_SESSION['user_id'];
+        $userId = $_SESSION['user_id'] ?? '';
         $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
 
@@ -90,9 +92,9 @@ class DashboardController extends BaseController
             return;
         }
 
-        // Kalau email diganti, pastikan belum dipakai user lain
+        // Kalau email diganti, pastikan belum dipakai user lain (Perbandingan string UUID)
         $existing = $this->user->findByEmail($email);
-        if ($existing && (int) $existing['id'] !== (int) $userId) {
+        if ($existing && $existing['id'] !== $userId) {
             $this->view('frontend/dashboard/profile', [
                 'title' => 'Profil Saya',
                 'user' => $this->user->find($userId),
@@ -107,8 +109,9 @@ class DashboardController extends BaseController
         if (!empty($_FILES['photo']['name'])) {
             try {
                 $uploaded = \App\helpers\UploadHelper::uploadImage($_FILES['photo'], 'avatars');
-                if ($uploaded)
+                if ($uploaded) {
                     $photo = $uploaded;
+                }
             } catch (\Exception $e) {
                 $this->view('frontend/dashboard/profile', [
                     'title' => 'Profil Saya',
@@ -119,18 +122,18 @@ class DashboardController extends BaseController
             }
         }
 
+        // Eksekusi update ke database
         $this->user->updateProfile($userId, [
             'name' => $name,
             'email' => $email,
             'photo' => $photo,
         ]);
 
-        // Update session agar header langsung ikut berubah
+        // 🔥 PENTING: Update data Session agar perubahan nama & foto langsung sinkron di Sidebar & Navbar!
         $_SESSION['user_name'] = $name;
-        $_SESSION['user_email'] = $email;
         $_SESSION['user_photo'] = $photo;
 
-        // Ambil ulang data terbaru dari database
+        // Ambil ulang data terbaru dari database untuk di-render ke view
         $user = $this->user->find($userId);
 
         $this->view('frontend/dashboard/profile', [
@@ -143,7 +146,7 @@ class DashboardController extends BaseController
     // POST /dashboard/password/update
     public function updatePassword(): void
     {
-        $userId = $_SESSION['user_id'];
+        $userId = $_SESSION['user_id'] ?? '';
         $oldPassword = $_POST['old_password'] ?? '';
         $newPassword = $_POST['new_password'] ?? '';
         $confirm = $_POST['confirm_password'] ?? '';
@@ -189,7 +192,7 @@ class DashboardController extends BaseController
     // GET /dashboard/orders
     public function orders(): void
     {
-        $orders = $this->order->byUser($_SESSION['user_id']);
+        $orders = $this->order->byUser($_SESSION['user_id'] ?? '');
 
         $this->view('frontend/dashboard/orders', [
             'title' => 'Riwayat Pesanan',
@@ -203,8 +206,8 @@ class DashboardController extends BaseController
         $invoice = $_GET['invoice'] ?? '';
         $order = $this->order->findByInvoice($invoice);
 
-        // Pastikan order ini benar milik user yang sedang login
-        if (!$order || (int) $order['user_id'] !== (int) $_SESSION['user_id']) {
+        // Pastikan order ini benar milik user yang sedang login (Perbandingan string UUID)
+        if (!$order || $order['user_id'] !== ($_SESSION['user_id'] ?? '')) {
             http_response_code(404);
             die('404 — Pesanan tidak ditemukan.');
         }
@@ -220,7 +223,7 @@ class DashboardController extends BaseController
     // GET /dashboard/downloads
     public function downloads(): void
     {
-        $downloads = $this->download->byUser($_SESSION['user_id']);
+        $downloads = $this->download->byUser($_SESSION['user_id'] ?? '');
 
         $this->view('frontend/dashboard/downloads', [
             'title' => 'Download Saya',
@@ -231,24 +234,23 @@ class DashboardController extends BaseController
     // POST /dashboard/orders/hide
     public function hideOrder(): void
     {
-        $id = (int) ($_POST['id'] ?? 0);
-        $this->order->hideFromUser($id, $_SESSION['user_id']);
+        $id = $_POST['id'] ?? '';
+        $this->order->hideFromUser($id, $_SESSION['user_id'] ?? '');
         $this->redirect('/dashboard/orders');
     }
 
     // POST /dashboard/downloads/hide
     public function hideDownload(): void
     {
-        $id = (int) ($_POST['id'] ?? 0);
-        $this->download->hideFromUser($id, $_SESSION['user_id']);
+        $id = $_POST['id'] ?? '';
+        $this->download->hideFromUser($id, $_SESSION['user_id'] ?? '');
         $this->redirect('/dashboard/downloads');
     }
 
     // POST /dashboard/downloads/hide-expired
     public function hideAllExpiredDownloads(): void
     {
-        $this->download->hideAllExpiredFromUser($_SESSION['user_id']);
+        $this->download->hideAllExpiredFromUser($_SESSION['user_id'] ?? '');
         $this->redirect('/dashboard/downloads');
     }
-
 }

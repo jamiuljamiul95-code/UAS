@@ -3,36 +3,44 @@ namespace App\models;
 
 use Database;
 
-class BaseModel {
+class BaseModel
+{
     protected $db;
     protected $table;
 
-    public function __construct() {
+    public function __construct()
+    {
         require_once ROOT . '/config/database.php';
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function find(int $id): ?array {
+    public function find($id): ?array
+    {
+        $id = (int) $id;
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch() ?: null;
     }
 
-    public function findBy(string $col, $value): ?array {
+    public function findBy(string $col, $value): ?array
+    {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$col} = ?");
         $stmt->execute([$value]);
         return $stmt->fetch() ?: null;
     }
 
-    public function create(array $data): int {
+    public function create(array $data): int
+    {
         $cols = implode(',', array_keys($data));
         $placeholders = implode(',', array_fill(0, count($data), '?'));
         $stmt = $this->db->prepare("INSERT INTO {$this->table} ($cols) VALUES ($placeholders)");
         $stmt->execute(array_values($data));
-        return (int)$this->db->lastInsertId();
+        return (int) $this->db->lastInsertId();
     }
 
-    public function update(int $id, array $data): bool {
+    public function update($id, array $data): bool
+    {
+        $id = (int) $id;
         $set = implode(',', array_map(fn($k) => "$k=?", array_keys($data)));
         $stmt = $this->db->prepare("UPDATE {$this->table} SET $set WHERE id=?");
         return $stmt->execute([...array_values($data), $id]);

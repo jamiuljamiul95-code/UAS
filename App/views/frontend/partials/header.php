@@ -19,7 +19,7 @@
     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
         <!-- Banner kecil khusus kalau admin sedang berada di halaman customer (bukan area /admin) -->
         <div class="admin-notice-bar">
-            <span>Kamu login sebagai <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong> (Admin)</span>
+            <span>Kamu login sebagai <strong><?= htmlspecialchars($_SESSION['user_name'] ?? '') ?></strong> (Admin)</span>
             <a href="<?= BASE_URL ?>/admin/dashboard">Buka Admin Panel →</a>
         </div>
     <?php endif; ?>
@@ -35,10 +35,18 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navMain">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+
+                <!-- 1. KELOMPOK MENU UTAMA (Otomatis ke Tengah berkat mx-auto) -->
+                <ul class="navbar-nav mx-auto align-items-lg-center gap-3">
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/shop">Shop</a></li>
+                    <!-- Kamu tinggal tambah <li> baru di bawah sini jika ada menu mendatang, otomatis ikut di tengah -->
+                </ul>
+
+                <!-- 2. KELOMPOK FITUR & PROFIL (Tetap di Kanan berkat ms-auto) -->
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
                     <li class="nav-item">
                         <form action="<?= BASE_URL ?>/shop" method="GET" class="navbar-search-form d-flex">
                             <input type="text" name="q" class="form-control form-control-sm rounded-pill"
@@ -46,10 +54,10 @@
                         </form>
                     </li>
 
-                    <?php if (isset($_SESSION['user_id']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <?php if (isset($_SESSION['user_id'], $_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                         <li class="nav-item"><a class="btn btn-sm btn-nav-user rounded-pill"
                                 href="<?= BASE_URL ?>/admin/dashboard">
-                                <?= htmlspecialchars($_SESSION['user_name']) ?> (Admin)
+                                <?= htmlspecialchars($_SESSION['user_name'] ?? '') ?> (Admin)
                             </a></li>
 
                     <?php elseif (isset($_SESSION['user_id'])): ?>
@@ -182,11 +190,11 @@
                                         class="user-avatar" alt="Avatar">
                                 <?php else: ?>
                                     <div class="user-avatar-placeholder">
-                                        <?= strtoupper(substr($_SESSION['user_name'], 0, 1)) ?>
+                                        <?= strtoupper(substr($_SESSION['user_name'] ?? '', 0, 1)) ?>
                                     </div>
                                 <?php endif; ?>
                                 <span class="user-name">
-                                    <?= htmlspecialchars($_SESSION['user_name']) ?>
+                                    <?= htmlspecialchars($_SESSION['user_name'] ?? '') ?>
                                 </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow">
@@ -234,7 +242,7 @@
 
                     <?php else: ?>
 
-                        <!-- Keranjang untuk guest juga -->
+                        <!-- Keranjang untuk guest -->
                         <li class="nav-item">
                             <a class="nav-icon-link position-relative" href="<?= BASE_URL ?>/cart">
                                 <i class="ti ti-shopping-cart"></i>
@@ -251,7 +259,6 @@
                         <li class="nav-item"><a class="btn btn-sm btn-nav-primary rounded-pill"
                                 href="<?= BASE_URL ?>/register">Daftar</a></li>
                     <?php endif; ?>
-
                 </ul>
             </div>
         </div>

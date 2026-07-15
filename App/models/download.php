@@ -5,7 +5,8 @@ class Download extends BaseModel
 {
     protected $table = 'downloads';
 
-    public function generateForOrder(int $userId, int $orderId): void
+    // Parameter $userId diubah menjadi string agar mendukung UUID
+    public function generateForOrder(string $userId, int $orderId): void
     {
         $items = (new Order())->getItems($orderId);
 
@@ -36,7 +37,8 @@ class Download extends BaseModel
      * Ambil semua link download milik 1 user, lengkap dengan nama produk & invoice.
      * Dipakai di halaman Dashboard > Download.
      */
-    public function byUser(int $userId): array
+    // Parameter $userId diubah dari int menjadi string
+    public function byUser(string $userId): array
     {
         $stmt = $this->db->prepare("
         SELECT d.*, p.title AS product_title, p.thumbnail, o.invoice
@@ -50,7 +52,8 @@ class Download extends BaseModel
         return $stmt->fetchAll();
     }
 
-    public function hideFromUser(int $id, int $userId): bool
+    // Parameter $userId diubah dari int menjadi string
+    public function hideFromUser(int $id, string $userId): bool
     {
         $stmt = $this->db->prepare("
         UPDATE downloads SET is_hidden = 1 
@@ -58,10 +61,12 @@ class Download extends BaseModel
     ");
         return $stmt->execute([$id, $userId]);
     }
+
     /**
      * Hapus (soft-hide) semua download milik user yang sudah kedaluwarsa
      */
-    public function hideAllExpiredFromUser(int $userId): void
+    // Parameter $userId diubah dari int menjadi string
+    public function hideAllExpiredFromUser(string $userId): void
     {
         $db = \Database::getInstance()->getConnection();
 

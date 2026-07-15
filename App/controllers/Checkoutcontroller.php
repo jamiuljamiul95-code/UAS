@@ -5,46 +5,62 @@ use App\models\Product;
 use App\models\Order;
 use App\helpers\CartHelper;
 
-class CheckoutController extends BaseController {
+class CheckoutController extends BaseController
+{
     private Product $product;
     private Order $order;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->product = new Product();
-        $this->order   = new Order();
+        $this->order = new Order();
     }
 
     // GET /checkout
-    public function index(): void {
-        if (!isset($_SESSION['user_id'])) { $this->redirect('/login'); return; }
+    public function index(): void
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/login');
+            return;
+        }
 
         $ids = CartHelper::all();
-        if (empty($ids)) { $this->redirect('/cart'); return; }
+        if (empty($ids)) {
+            $this->redirect('/cart');
+            return;
+        }
 
         $items = $this->product->findMany($ids);
         [$subtotal, $couponDiscount, $total] = $this->calculateTotal($items);
 
         $this->view('frontend/checkout', [
-            'title'          => 'Checkout — Mizu Design',
-            'items'          => $items,
-            'subtotal'       => $subtotal,
+            'title' => 'Checkout — Mizu Design',
+            'items' => $items,
+            'subtotal' => $subtotal,
             'couponDiscount' => $couponDiscount,
-            'total'          => $total,
+            'total' => $total,
         ]);
     }
 
     // POST /checkout
-    public function process(): void {
-        if (!isset($_SESSION['user_id'])) { $this->redirect('/login'); return; }
+    public function process(): void
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/login');
+            return;
+        }
 
         $ids = CartHelper::all();
-        if (empty($ids)) { $this->redirect('/cart'); return; }
+        if (empty($ids)) {
+            $this->redirect('/cart');
+            return;
+        }
 
         $items = $this->product->findMany($ids);
         [$subtotal, $couponDiscount, $total] = $this->calculateTotal($items);
 
         $invoice = $this->order->generateInvoice();
-        $orderId = $this->order->createOrder($_SESSION['user_id'], $invoice, $total);
+        $orderId = $this->order->createOrder((int) ($_SESSION['user_id'] ?? 0), $invoice, $total);
 
         foreach ($items as $item) {
             $price = $item['discount'] > 0
@@ -53,13 +69,17 @@ class CheckoutController extends BaseController {
             $this->order->addItem($orderId, $item['id'], $price);
         }
         $notif = new \App\models\Notification();
-        $notif->push(null, 'order',
+        $notif->push(
+            null,
+            'order',
             'Order Baru Masuk',
             'Invoice ' . $invoice . ' — Rp ' . number_format($total, 0, ',', '.'),
             '/admin/orders/detail?id=' . $orderId
         );
         // TAMBAHKAN INI ↓
-        $notif->push($_SESSION['user_id'], 'order',
+        $notif->push(
+            (int) ($_SESSION['user_id'] ?? 0),
+            'order',
             'Pesanan Berhasil Dibuat!',
             'Invoice ' . $invoice . ' senilai Rp ' . number_format($total, 0, ',', '.') . ' sedang menunggu pembayaran.',
             '/dashboard/orders'
@@ -74,14 +94,18 @@ class CheckoutController extends BaseController {
         // dan redirect ke halaman pembayaran, bukan langsung ke 'sukses'.
         $this->redirect('/checkout/pending?invoice=' . $invoice);
 
-        
+
     }
 
     // GET /checkout/pending — placeholder sebelum Midtrans terpasang
-    public function pending(): void {
+    public function pending(): void
+    {
         $invoice = $_GET['invoice'] ?? '';
         $order = $this->order->findByInvoice($invoice);
-        if (!$order) { http_response_code(404); die('Order tidak ditemukan.'); }
+        if (!$order) {
+            http_response_code(404);
+            die('Order tidak ditemukan.');
+        }
 
         $this->view('frontend/checkout-pending', [
             'title' => 'Menunggu Pembayaran — Mizu Design',
@@ -89,7 +113,8 @@ class CheckoutController extends BaseController {
         ]);
     }
 
-    private function calculateTotal(array $items): array {
+    private function calculateTotal(array $items): array
+    {
         $subtotal = 0;
         foreach ($items as $item) {
             $price = $item['discount'] > 0
@@ -106,5 +131,5 @@ class CheckoutController extends BaseController {
         return [$subtotal, $couponDiscount, $subtotal - $couponDiscount];
     }
 
-    
+
 }

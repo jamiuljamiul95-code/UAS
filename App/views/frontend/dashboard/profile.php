@@ -32,13 +32,13 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label>Nama Lengkap</label>
-                  <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($user['name']) ?>"
-                    required>
+                  <input type="text" name="name" class="form-control"
+                    value="<?= htmlspecialchars($user['name'] ?? "") ?>" required>
                 </div>
                 <div class="col-md-6">
                   <label>Email</label>
-                  <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>"
-                    required>
+                  <input type="email" name="email" class="form-control"
+                    value="<?= htmlspecialchars($user['email'] ?? '') ?>" required>
                 </div>
                 <div class="col-md-6">
                   <label>Foto Profil</label>

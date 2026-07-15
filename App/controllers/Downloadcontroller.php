@@ -24,7 +24,7 @@ class DownloadController extends BaseController
             die('Link download tidak valid.');
         }
 
-        if ((int) $dl['user_id'] !== (int) $_SESSION['user_id']) {
+        if ((int) $dl['user_id'] !== (int) ($_SESSION['user_id'] ?? 0)) {
             http_response_code(403);
             die('Akses ditolak.');
         }

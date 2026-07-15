@@ -19,8 +19,8 @@ class Notification extends BaseModel
         return $stmt->fetchAll();
     }
 
-    // Ambil notif untuk customer tertentu
-    public function forUser(int $userId, int $limit = 10): array
+    // Ambil notif untuk customer tertentu (Diubah ke string agar mendukung UUID)
+    public function forUser(string $userId, int $limit = 10): array
     {
         $stmt = $this->db->prepare("
             SELECT * FROM notifications
@@ -28,14 +28,14 @@ class Notification extends BaseModel
             ORDER BY created_at DESC
             LIMIT ?
         ");
-        $stmt->bindValue(1, $userId, \PDO::PARAM_INT);
+        $stmt->bindValue(1, $userId, \PDO::PARAM_STR); // Menggunakan PARAM_STR untuk string/UUID
         $stmt->bindValue(2, $limit, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
-    // Hitung notif yang belum dibaca
-    public function countUnread(?int $userId = null): int
+    // Hitung notif yang belum dibaca (Diubah ke ?string agar mendukung UUID)
+    public function countUnread(?string $userId = null): int
     {
         if ($userId === null) {
             $stmt = $this->db->query("SELECT COUNT(*) FROM notifications WHERE user_id IS NULL AND is_read = 0");
@@ -46,8 +46,8 @@ class Notification extends BaseModel
         return (int) $stmt->fetchColumn();
     }
 
-    // Tandai semua sudah dibaca
-    public function markAllRead(?int $userId = null): void
+    // Tandai semua sudah dibaca (Diubah ke ?string agar mendukung UUID)
+    public function markAllRead(?string $userId = null): void
     {
         if ($userId === null) {
             $this->db->exec("UPDATE notifications SET is_read = 1 WHERE user_id IS NULL");
@@ -57,8 +57,8 @@ class Notification extends BaseModel
         }
     }
 
-    // Buat notif baru
-    public function push(?int $userId, string $type, string $title, string $message, string $url = ''): void
+    // Buat notif baru (Diubah ke ?string agar mendukung UUID)
+    public function push(?string $userId, string $type, string $title, string $message, string $url = ''): void
     {
         $this->create([
             'user_id' => $userId,
@@ -72,9 +72,9 @@ class Notification extends BaseModel
 
 
     /**
-     * Hapus 1 notifikasi milik user tertentu (pastikan user hanya bisa hapus miliknya sendiri)
+     * Hapus 1 notifikasi milik user tertentu (Diubah ke string agar mendukung UUID)
      */
-    public function deleteOne(int $id, int $userId): void
+    public function deleteOne(int $id, string $userId): void
     {
         $db = \Database::getInstance()->getConnection();
         $stmt = $db->prepare("DELETE FROM notifications WHERE id = ? AND user_id = ?");
@@ -82,9 +82,9 @@ class Notification extends BaseModel
     }
 
     /**
-     * Hapus semua notifikasi milik user
+     * Hapus semua notifikasi milik user (Diubah ke string agar mendukung UUID)
      */
-    public function deleteAllForUser(int $userId): void
+    public function deleteAllForUser(string $userId): void
     {
         $db = \Database::getInstance()->getConnection();
         $stmt = $db->prepare("DELETE FROM notifications WHERE user_id = ?");

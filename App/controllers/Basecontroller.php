@@ -32,15 +32,17 @@ class BaseController
     protected function headerData(): array
     {
         $header = [
-            'cartCount'      => count($_SESSION['cart'] ?? []),
-            'wishlistCount'  => 0,
-            'notifications'  => [],
-            'unreadCount'    => 0,
+            'cartCount' => count($_SESSION['cart'] ?? []),
+            'wishlistCount' => 0,
+            'notifications' => [],
+            'unreadCount' => 0,
         ];
 
         if (!isset($_SESSION['user_id'])) {
             return $header;
         }
+
+        $userId = (int) ($_SESSION['user_id'] ?? 0);
 
         $db = Database::getInstance()->getConnection();
 
@@ -52,21 +54,21 @@ class BaseController
         ");
 
         $stmt->execute([
-            $_SESSION['user_id']
+            $userId
         ]);
 
-        $header['wishlistCount'] = (int)$stmt->fetchColumn();
+        $header['wishlistCount'] = (int) $stmt->fetchColumn();
 
         // Notification
         $notif = new Notification();
 
         $header['notifications'] = $notif->forUser(
-            $_SESSION['user_id'],
+            $userId,
             5
         );
 
         $header['unreadCount'] = $notif->countUnread(
-            $_SESSION['user_id']
+            $userId
         );
 
         return $header;
