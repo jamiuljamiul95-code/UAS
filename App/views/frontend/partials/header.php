@@ -42,6 +42,8 @@
                 <ul class="navbar-nav mx-auto align-items-lg-center gap-3">
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/shop">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/promo">Promo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>/blog">Blog</a></li>
                     <!-- Kamu tinggal tambah <li> baru di bawah sini jika ada menu mendatang, otomatis ikut di tengah -->
                 </ul>
 
@@ -153,7 +155,8 @@
                                             ?>
                                             <div class="notif-item <?= $isUnread ? 'notif-unread' : '' ?>"
                                                 data-notif-id="<?= $n['id'] ?>">
-                                                <a class="notif-item-link" href="<?= BASE_URL . $n['url'] ?>">
+                                                <a class="notif-item-link"
+                                                    href="<?= BASE_URL ?>/notifications/read?id=<?= $n['id'] ?>&redirect=<?= urlencode($n['url']) ?>">
                                                     <span class="notif-icon <?= $colorClass ?>">
                                                         <i class="ti <?= $iconClass ?>"></i>
                                                     </span>

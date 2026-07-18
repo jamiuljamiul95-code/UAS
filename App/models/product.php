@@ -1,10 +1,12 @@
 <?php
 namespace App\models;
 
-class Product extends BaseModel {
+class Product extends BaseModel
+{
     protected $table = 'products';
 
-    public function all(): array {
+    public function all(): array
+    {
         $stmt = $this->db->query("
             SELECT p.*, c.name AS category_name
             FROM products p
@@ -14,7 +16,8 @@ class Product extends BaseModel {
         return $stmt->fetchAll();
     }
 
-    public function findBySlug(string $slug): ?array {
+    public function findBySlug(string $slug): ?array
+    {
         $stmt = $this->db->prepare("
             SELECT p.*, c.name AS category_name, c.slug AS category_slug
             FROM products p
@@ -25,7 +28,8 @@ class Product extends BaseModel {
         return $stmt->fetch() ?: null;
     }
 
-    public function published(int $limit = 20, int $offset = 0): array {
+    public function published(int $limit = 20, int $offset = 0): array
+    {
         $stmt = $this->db->prepare("
             SELECT p.*, c.name AS category_name
             FROM products p
@@ -40,7 +44,8 @@ class Product extends BaseModel {
         return $stmt->fetchAll();
     }
 
-    public function search(string $keyword): array {
+    public function search(string $keyword): array
+    {
         $stmt = $this->db->prepare("
             SELECT p.*, c.name AS category_name
             FROM products p
@@ -52,7 +57,8 @@ class Product extends BaseModel {
         return $stmt->fetchAll();
     }
 
-    public function byCategory(int $categoryId): array {
+    public function byCategory(int $categoryId): array
+    {
         $stmt = $this->db->prepare("
             SELECT p.*, c.name AS category_name
             FROM products p
@@ -64,12 +70,15 @@ class Product extends BaseModel {
         return $stmt->fetchAll();
     }
 
-    public function delete(int $id): bool {
+    public function delete(int $id): bool
+    {
         $stmt = $this->db->prepare("DELETE FROM products WHERE id = ?");
         return $stmt->execute([$id]);
     }
-    public function findMany(array $ids): array {
-        if (empty($ids)) return [];
+    public function findMany(array $ids): array
+    {
+        if (empty($ids))
+            return [];
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $stmt = $this->db->prepare("
             SELECT p.*, c.name AS category_name
@@ -82,9 +91,10 @@ class Product extends BaseModel {
     }
 
     /**
- * Ambil semua produk dari kategori utama + semua sub-kategorinya
- */
-    public function byParentCategory(int $parentId): array {
+     * Ambil semua produk dari kategori utama + semua sub-kategorinya
+     */
+    public function byParentCategory(int $parentId): array
+    {
         $stmt = $this->db->prepare("
             SELECT p.*, c.name AS category_name
             FROM products p
@@ -102,26 +112,45 @@ class Product extends BaseModel {
         return $stmt->fetchAll();
     }
 
-    public function getMedia(int $productId): array {
-    $stmt = $this->db->prepare("
+    public function getMedia(int $productId): array
+    {
+        $stmt = $this->db->prepare("
         SELECT * FROM product_media 
         WHERE product_id = ? 
         ORDER BY sort_order ASC, id ASC
     ");
-    $stmt->execute([$productId]);
-    return $stmt->fetchAll();
+        $stmt->execute([$productId]);
+        return $stmt->fetchAll();
     }
-    
-    public function addMedia(int $productId, string $type, string $filePath, int $order = 0): void {
+
+    public function addMedia(int $productId, string $type, string $filePath, int $order = 0): void
+    {
         $stmt = $this->db->prepare("
             INSERT INTO product_media (product_id, type, file_path, sort_order) 
             VALUES (?, ?, ?, ?)
         ");
         $stmt->execute([$productId, $type, $filePath, $order]);
     }
-    
-    public function deleteMedia(int $mediaId): void {
+
+    public function deleteMedia(int $mediaId): void
+    {
         $stmt = $this->db->prepare("DELETE FROM product_media WHERE id = ?");
         $stmt->execute([$mediaId]);
+    }
+    // Tambahkan fungsi ini di dalam class Product
+    public function getPromoProducts(): array
+    {
+        // Mengambil produk yang memiliki diskon > 0
+        $stmt = $this->db->query("
+            SELECT p.*, c.name AS category_name
+            FROM products p
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.status = 'published'
+            AND p.discount IS NOT NULL 
+            AND p.discount > 0 
+            ORDER BY p.created_at DESC
+        ");
+
+        return $stmt->fetchAll();
     }
 }

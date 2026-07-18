@@ -90,4 +90,23 @@ class Notification extends BaseModel
         $stmt = $db->prepare("DELETE FROM notifications WHERE user_id = ?");
         $stmt->execute([$userId]);
     }
+    // Tandai 1 notifikasi tertentu sudah dibaca
+    public function markOneRead(int $id): void
+    {
+        $stmt = $this->db->prepare("UPDATE notifications SET is_read = 1 WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    // Hapus 1 notifikasi admin
+    public function deleteAdminOne(int $id): void
+    {
+        $stmt = $this->db->prepare("DELETE FROM notifications WHERE id = ? AND user_id IS NULL");
+        $stmt->execute([$id]);
+    }
+
+    // Hapus semua notifikasi admin
+    public function deleteAllAdmin(): void
+    {
+        $this->db->exec("DELETE FROM notifications WHERE user_id IS NULL");
+    }
 }

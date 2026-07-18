@@ -1,10 +1,12 @@
 <?php
 namespace App\models;
 
-class Wishlist extends BaseModel {
+class Wishlist extends BaseModel
+{
     protected $table = 'wishlists';
 
-    public function byUser(int $userId): array {
+    public function byUser(string $userId): array
+    {
         $stmt = $this->db->prepare("
             SELECT w.*, p.title, p.slug, p.thumbnail, p.price, p.discount, c.name AS category_name
             FROM wishlists w
@@ -17,7 +19,8 @@ class Wishlist extends BaseModel {
         return $stmt->fetchAll();
     }
 
-    public function toggle(int $userId, int $productId): array {
+    public function toggle(string $userId, string $productId): array
+    {
         $existing = $this->db->prepare("SELECT id FROM wishlists WHERE user_id = ? AND product_id = ?");
         $existing->execute([$userId, $productId]);
         $row = $existing->fetch();
@@ -31,9 +34,10 @@ class Wishlist extends BaseModel {
         }
     }
 
-    public function isWishlisted(int $userId, int $productId): bool {
+    public function isWishlisted(string $userId, string $productId): bool
+    {
         $stmt = $this->db->prepare("SELECT id FROM wishlists WHERE user_id = ? AND product_id = ?");
         $stmt->execute([$userId, $productId]);
-        return (bool)$stmt->fetch();
+        return (bool) $stmt->fetch();
     }
 }
