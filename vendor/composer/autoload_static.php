@@ -14,6 +14,7 @@ class ComposerStaticInit02a83c3ada8cda047545562a2a93198e
         'S' =>
         array (
             'Svg\\' => 4,
+            'SnapBi\\' => 7,
             'Sabberworm\\CSS\\' => 15,
         ),
         'P' =>
@@ -24,6 +25,7 @@ class ComposerStaticInit02a83c3ada8cda047545562a2a93198e
         ),
         'M' =>
         array (
+            'Midtrans\\' => 9,
             'Matrix\\' => 7,
             'Masterminds\\' => 12,
         ),
@@ -55,6 +57,10 @@ class ComposerStaticInit02a83c3ada8cda047545562a2a93198e
         array (
             0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
         ),
+        'SnapBi\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/midtrans/midtrans-php/SnapBi',
+        ),
         'Sabberworm\\CSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
@@ -70,6 +76,10 @@ class ComposerStaticInit02a83c3ada8cda047545562a2a93198e
         'PHPMailer\\PHPMailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Midtrans\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans',
         ),
         'Matrix\\' =>
         array (

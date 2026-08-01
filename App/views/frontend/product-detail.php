@@ -18,10 +18,9 @@ $finalPrice = $product['discount'] > 0
                 <div class="product-image-wrap" id="mainMedia">
 
                     <?php if ($product['discount'] > 0): ?>
-                        <span class="badge-discount-lg">
-                            -
-                            <?= (int) $product['discount'] ?>%
-                        </span>
+                    <span class="badge-discount-lg">
+                        -<?= (int) $product['discount'] ?>%
+                    </span>
                     <?php endif; ?>
 
                     <img id="mainImg"
@@ -30,21 +29,21 @@ $finalPrice = $product['discount'] > 0
 
                     <?php if (!empty($media)): ?>
 
-                        <button class="slider-nav slider-nav-prev" onclick="navSlide(-1)">
-                            <i class="ti ti-chevron-left"></i>
-                        </button>
+                    <button class="slider-nav slider-nav-prev" onclick="navSlide(-1)">
+                        <i class="ti ti-chevron-left"></i>
+                    </button>
 
-                        <button class="slider-nav slider-nav-next" onclick="navSlide(1)">
-                            <i class="ti ti-chevron-right"></i>
-                        </button>
+                    <button class="slider-nav slider-nav-next" onclick="navSlide(1)">
+                        <i class="ti ti-chevron-right"></i>
+                    </button>
 
-                        <div class="gallery-counter">
-                            <span id="currentSlide">1</span>
-                            /
-                            <span id="totalSlide">
-                                <?= count($media) + 1 ?>
-                            </span>
-                        </div>
+                    <div class="gallery-counter">
+                        <span id="currentSlide">1</span>
+                        /
+                        <span id="totalSlide">
+                            <?= count($media) + 1 ?>
+                        </span>
+                    </div>
 
                     <?php endif; ?>
 
@@ -53,55 +52,55 @@ $finalPrice = $product['discount'] > 0
                 <!-- Thumbnail -->
                 <?php if (!empty($media)): ?>
 
-                    <div class="thumb-wrapper">
+                <div class="thumb-wrapper">
 
-                        <div class="media-thumb-list" id="mediaThumb">
+                    <div class="media-thumb-list" id="mediaThumb">
 
-                            <!-- Thumbnail utama -->
-                            <div class="media-thumb active" data-type="img"
-                                data-src="<?= BASE_URL ?>/assets/images/products/<?= htmlspecialchars($product['preview_image'] ?: $product['thumbnail']) ?>"
-                                onclick="switchMedia(this)">
+                        <!-- Thumbnail utama -->
+                        <div class="media-thumb active" data-type="img"
+                            data-src="<?= BASE_URL ?>/assets/images/products/<?= htmlspecialchars($product['preview_image'] ?: $product['thumbnail']) ?>"
+                            onclick="switchMedia(this)">
 
-                                <img src="<?= BASE_URL ?>/assets/images/products/<?= htmlspecialchars($product['thumbnail']) ?>"
-                                    alt="">
-
-                            </div>
-
-                            <?php foreach ($media as $m): ?>
-
-                                <?php if ($m['type'] == 'image'): ?>
-
-                                    <div class="media-thumb" data-type="img"
-                                        data-src="<?= BASE_URL ?>/assets/images/products/<?= $m['file_path'] ?>"
-                                        onclick="switchMedia(this)">
-
-                                        <img src="<?= BASE_URL ?>/assets/images/products/<?= $m['file_path'] ?>" alt="">
-
-                                    </div>
-
-                                <?php else: ?>
-
-                                    <div class="media-thumb media-thumb-video" data-type="video"
-                                        data-src="<?= BASE_URL ?>/assets/videos/products/<?= $m['file_path'] ?>"
-                                        onclick="switchMedia(this)">
-
-                                        <video muted>
-                                            <source src="<?= BASE_URL ?>/assets/videos/products/<?= $m['file_path'] ?>">
-                                        </video>
-
-                                        <span class="video-play">
-                                            <i class="ti ti-player-play-filled"></i>
-                                        </span>
-
-                                    </div>
-
-                                <?php endif; ?>
-
-                            <?php endforeach; ?>
+                            <img src="<?= BASE_URL ?>/assets/images/products/<?= htmlspecialchars($product['thumbnail']) ?>"
+                                alt="">
 
                         </div>
 
+                        <?php foreach ($media as $m): ?>
+
+                        <?php if ($m['type'] == 'image'): ?>
+
+                        <div class="media-thumb" data-type="img"
+                            data-src="<?= BASE_URL ?>/assets/images/products/<?= $m['file_path'] ?>"
+                            onclick="switchMedia(this)">
+
+                            <img src="<?= BASE_URL ?>/assets/images/products/<?= $m['file_path'] ?>" alt="">
+
+                        </div>
+
+                        <?php else: ?>
+
+                        <div class="media-thumb media-thumb-video" data-type="video"
+                            data-src="<?= BASE_URL ?>/assets/videos/products/<?= $m['file_path'] ?>"
+                            onclick="switchMedia(this)">
+
+                            <video muted>
+                                <source src="<?= BASE_URL ?>/assets/videos/products/<?= $m['file_path'] ?>">
+                            </video>
+
+                            <span class="video-play">
+                                <i class="ti ti-player-play-filled"></i>
+                            </span>
+
+                        </div>
+
+                        <?php endif; ?>
+
+                        <?php endforeach; ?>
+
                     </div>
+
+                </div>
 
                 <?php endif; ?>
 
@@ -121,8 +120,8 @@ $finalPrice = $product['discount'] > 0
                     <div class="price-wrap">
                         <span class="price-final">Rp <?= number_format($finalPrice, 0, ',', '.') ?></span>
                         <?php if ($product['discount'] > 0): ?>
-                            <span class="price-original">Rp <?= number_format($product['price'], 0, ',', '.') ?></span>
-                            <span class="discount-badge">Hemat <?= (int) $product['discount'] ?>%</span>
+                        <span class="price-original">Rp <?= number_format($product['price'], 0, ',', '.') ?></span>
+                        <span class="discount-badge">Hemat <?= (int) $product['discount'] ?>%</span>
                         <?php endif; ?>
                     </div>
 
@@ -133,8 +132,8 @@ $finalPrice = $product['discount'] > 0
                             <div class="lbl">Terjual</div>
                         </div>
                         <div class="meta-item">
-                            <div class="val">⭐ 5.0</div>
-                            <div class="lbl">Rating</div>
+                            <div class="val">⭐ <?= number_format($ratingSummary['avg_rating'], 1) ?></div>
+                            <div class="lbl"><?= (int) $ratingSummary['total_reviews'] ?> Ulasan</div>
                         </div>
                         <div class="meta-item">
                             <div class="val">✅</div>
@@ -179,158 +178,202 @@ $finalPrice = $product['discount'] > 0
             <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
         </div>
 
+        <!-- ===== Rating & Ulasan ===== -->
+        <div class="desc-card" id="reviews" data-aos="fade-up">
+            <h6><i class="ti ti-star"></i> Ulasan Pembeli (<?= (int) $ratingSummary['total_reviews'] ?>)</h6>
+
+            <?php if ($canReview): ?>
+            <form action="<?= BASE_URL ?>/product/<?= $product['slug'] ?>/review" method="POST"
+                class="review-form mb-4">
+                <label class="fw-semibold small mb-2 d-block">Kasih rating & ulasan kamu</label>
+                <div class="star-rating-input mb-3">
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                    <input type="radio" name="rating" id="star<?= $i ?>" value="<?= $i ?>"
+                        <?= $i == 5 ? 'checked' : '' ?>>
+                    <label for="star<?= $i ?>"><i class="ti ti-star-filled"></i></label>
+                    <?php endfor; ?>
+                </div>
+                <textarea name="comment" class="form-control mb-3" rows="3"
+                    placeholder="Ceritakan pengalamanmu dengan produk ini (opsional)"></textarea>
+                <button type="submit" class="btn-cart-lg" style="width:auto">Kirim Ulasan</button>
+            </form>
+            <?php elseif ($alreadyReviewed): ?>
+            <p class="small text-secondary mb-4">✅ Kamu sudah memberi ulasan untuk produk ini. Terima kasih!</p>
+            <?php elseif (isset($_SESSION['user_id'])): ?>
+            <p class="small text-secondary mb-4">Beli & bayar produk ini dulu untuk bisa memberi ulasan.</p>
+            <?php endif; ?>
+
+            <?php if (empty($reviews)): ?>
+            <p class="small text-secondary mb-0">Belum ada ulasan untuk produk ini.</p>
+            <?php else: ?>
+            <?php foreach ($reviews as $r): ?>
+            <div class="review-item">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <strong class="small"><?= htmlspecialchars($r['user_name']) ?></strong>
+                    <span class="text-warning small">
+                        <?= str_repeat('★', $r['rating']) ?> <?= str_repeat('☆', 5 - $r['rating']) ?>
+                    </span>
+                </div>
+                <?php if ($r['comment']): ?>
+                <p class="small text-secondary mb-1"><?= nl2br(htmlspecialchars($r['comment'])) ?></p>
+                <?php endif; ?>
+                <span class="small text-secondary"
+                    style="font-size:11px"><?= date('d M Y', strtotime($r['created_at'])) ?></span>
+            </div>
+            <hr class="my-3">
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
     </div>
 </div>
 
 <script>
-    function switchMedia(el) {
+function switchMedia(el) {
 
-        const type = el.dataset.type;
-        const src = el.dataset.src;
-        const mainMedia = document.getElementById("mainMedia");
+    const type = el.dataset.type;
+    const src = el.dataset.src;
+    const mainMedia = document.getElementById("mainMedia");
 
-        document.querySelectorAll(".media-thumb")
-            .forEach(item => item.classList.remove("active"));
+    document.querySelectorAll(".media-thumb")
+        .forEach(item => item.classList.remove("active"));
 
-        el.classList.add("active");
+    el.classList.add("active");
 
-        const index = [...document.querySelectorAll(".media-thumb")]
-            .indexOf(el);
+    const index = [...document.querySelectorAll(".media-thumb")]
+        .indexOf(el);
 
-        document.getElementById("currentSlide").innerText = index + 1;
+    document.getElementById("currentSlide").innerText = index + 1;
 
-        const current = document.getElementById("mainImg");
+    const current = document.getElementById("mainImg");
 
-        if (type === "img") {
+    if (type === "img") {
 
-            // Kalau elemen yang sedang tampil BUKAN <img> (misal masih <video>),
-            // hapus dulu baru buat <img> baru. Ini fix supaya video tidak "ketuker" jadi foto.
-            if (!current || current.tagName !== "IMG") {
+        if (!current || current.tagName !== "IMG") {
 
-                current?.remove();
+            current?.remove();
 
-                const img = document.createElement("img");
-                img.id = "mainImg";
-                mainMedia.prepend(img);
+            const img = document.createElement("img");
+            img.id = "mainImg";
+            mainMedia.prepend(img);
 
-                img.style.opacity = 0;
+            img.style.opacity = 0;
 
-                setTimeout(() => {
-                    img.src = src;
-                    img.style.opacity = 1;
-                }, 180);
-
-            } else {
-
-                current.style.opacity = 0;
-
-                setTimeout(() => {
-                    current.src = src;
-                    current.style.opacity = 1;
-                }, 180);
-
-            }
+            setTimeout(() => {
+                img.src = src;
+                img.style.opacity = 1;
+            }, 180);
 
         } else {
 
-            // Kalau elemen yang sedang tampil BUKAN <video>, hapus dulu baru buat <video> baru.
-            if (!current || current.tagName !== "VIDEO") {
+            current.style.opacity = 0;
 
-                current?.remove();
-
-                const video = document.createElement("video");
-                video.controls = true;
-                video.autoplay = true;
-                video.id = "mainImg";
-                mainMedia.prepend(video);
-                video.src = src;
-
-            } else {
-
+            setTimeout(() => {
                 current.src = src;
+                current.style.opacity = 1;
+            }, 180);
 
-            }
+        }
+
+    } else {
+
+        if (!current || current.tagName !== "VIDEO") {
+
+            current?.remove();
+
+            const video = document.createElement("video");
+            video.controls = true;
+            video.autoplay = true;
+            video.id = "mainImg";
+            mainMedia.prepend(video);
+            video.src = src;
+
+        } else {
+
+            current.src = src;
 
         }
 
     }
 
-    function navSlide(direction) {
-        const thumbs = Array.from(document.querySelectorAll('.media-thumb'));
-        const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
-        let nextIndex = activeIndex + direction;
+}
 
-        if (nextIndex < 0) nextIndex = thumbs.length - 1;
-        if (nextIndex >= thumbs.length) nextIndex = 0;
+function navSlide(direction) {
+    const thumbs = Array.from(document.querySelectorAll('.media-thumb'));
+    const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
+    let nextIndex = activeIndex + direction;
 
-        switchMedia(thumbs[nextIndex]);
-        thumbs[nextIndex].scrollIntoView({
-            behavior: 'smooth',
-            inline: 'center',
-            block: 'nearest'
+    if (nextIndex < 0) nextIndex = thumbs.length - 1;
+    if (nextIndex >= thumbs.length) nextIndex = 0;
+
+    switchMedia(thumbs[nextIndex]);
+    thumbs[nextIndex].scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+    });
+}
+
+function addToCart(id) {
+    fetch('<?= BASE_URL ?>/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'product_id=' + id
+        })
+        .then(r => r.json())
+        .then(data => {
+            Swal.fire({
+                icon: data.success ? 'success' : 'error',
+                title: data.success ? 'Ditambahkan!' : 'Gagal',
+                text: data.message,
+                timer: 1800,
+                showConfirmButton: false
+            });
         });
-    }
+}
 
-    function addToCart(id) {
-        fetch('<?= BASE_URL ?>/cart/add', {
+function buyNow(id) {
+    fetch('<?= BASE_URL ?>/cart/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: 'product_id=' + id
         })
-            .then(r => r.json())
-            .then(data => {
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '<?= BASE_URL ?>/checkout';
+            } else {
                 Swal.fire({
-                    icon: data.success ? 'success' : 'error',
-                    title: data.success ? 'Ditambahkan!' : 'Gagal',
-                    text: data.message,
-                    timer: 1800,
-                    showConfirmButton: false
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: data.message
                 });
-            });
-    }
+            }
+        });
+}
 
-    function buyNow(id) {
-        fetch('<?= BASE_URL ?>/cart/add', {
+function addWishlist(id) {
+    fetch('<?= BASE_URL ?>/wishlist/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: 'product_id=' + id
         })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = '<?= BASE_URL ?>/checkout';
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: data.message
-                    });
-                }
+        .then(r => r.json())
+        .then(data => {
+            Swal.fire({
+                icon: data.success ? 'success' : 'error',
+                title: data.message,
+                timer: 1800,
+                showConfirmButton: false
             });
-    }
-
-    function addWishlist(id) {
-        fetch('<?= BASE_URL ?>/wishlist/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'product_id=' + id
-        })
-            .then(r => r.json())
-            .then(data => {
-                Swal.fire({
-                    icon: data.success ? 'success' : 'error',
-                    title: data.message,
-                    timer: 1800,
-                    showConfirmButton: false
-                });
-            });
-    }
+        });
+}
 </script>
 
 <?php require ROOT . '/app/views/frontend/partials/footer.php'; ?>

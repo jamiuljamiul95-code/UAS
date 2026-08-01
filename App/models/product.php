@@ -153,4 +153,55 @@ class Product extends BaseModel
 
         return $stmt->fetchAll();
     }
+
+    public function getRatingSummary(int $productId): array
+    {
+        $stmt = $this->db->prepare("
+        SELECT COUNT(*) AS total_reviews, COALESCE(AVG(rating), 0) AS avg_rating
+        FROM reviews WHERE product_id = ?
+    ");
+        $stmt->execute([$productId]);
+        return $stmt->fetch();
+    }
+
+    public function getReviews(int $productId): array
+    {
+        $stmt = $this->db->prepare("
+        SELECT r.*, u.name AS user_name, u.photo AS user_photo
+        FROM reviews r
+        JOIN users u ON u.id = r.user_id
+        WHERE r.product_id = ?
+        ORDER BY r.created_at DESC
+    ");
+        $stmt->execute([$productId]);
+        return $stmt->fetchAll();
+    }
+
+    public function hasUserReviewed(int $productId, int $userId): bool
+    {
+        $stmt = $this->db->prepare("SELECT id FROM reviews WHERE product_id = ? AND user_id = ?");
+        $stmt->execute([$productId, $userId]);
+        return (bool) $stmt->fetch();
+    }
+
+    public function userHasPurchased(int $productId, int $userId): bool
+    {
+        $stmt = $this->db->prepare("
+        SELECT oi.id FROM order_items oi
+        JOIN orders o ON o.id = oi.order_id
+        WHERE o.user_id = ? AND oi.product_id = ? AND o.status = 'paid'
+        LIMIT 1
+    ");
+        $stmt->execute([$userId, $productId]);
+        return (bool) $stmt->fetch();
+    }
+
+    public function addReview(int $productId, int $userId, int $rating, ?string $comment): void
+    {
+        $stmt = $this->db->prepare("
+        INSERT INTO reviews (product_id, user_id, rating, comment)
+        VALUES (?, ?, ?, ?)
+    ");
+        $stmt->execute([$productId, $userId, $rating, $comment]);
+    }
 }

@@ -350,3 +350,31 @@
     gap: 12px;
   }
 }
+
+.star-rating-input {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.star-rating-input input {
+  display: none;
+}
+
+.star-rating-input label {
+  font-size: 26px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.star-rating-input input:checked ~ label,
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label {
+  color: #fbbf24;
+}
+
+.review-item:last-of-type + hr {
+  display: none;
+}

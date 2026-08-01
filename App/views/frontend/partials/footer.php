@@ -8,6 +8,20 @@
         </h5>
         <p class="text-secondary small">Marketplace produk digital — template, preset, font, dan asset kreatif
           lainnya.</p>
+        <div class="footer-social-icons">
+          <a href="https://instagram.com/mizudesign" target="_blank" rel="noopener" title="Instagram">
+            <i class="ti ti-brand-instagram"></i>
+          </a>
+          <a href="https://tiktok.com/@mizudesign" target="_blank" rel="noopener" title="TikTok">
+            <i class="ti ti-brand-tiktok"></i>
+          </a>
+          <a href="https://facebook.com/mizudesign" target="_blank" rel="noopener" title="Facebook">
+            <i class="ti ti-brand-facebook"></i>
+          </a>
+          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" title="WhatsApp">
+            <i class="ti ti-brand-whatsapp"></i>
+          </a>
+        </div>
       </div>
       <div class="col-md-2">
         <h6 class="fw-semibold">Produk</h6>

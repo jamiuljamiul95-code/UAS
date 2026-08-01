@@ -229,7 +229,8 @@ match (true) { //[cite: 1]
     $uri === 'about' => $pageCtrl->about(), //[cite: 1]
     $uri === 'faq' => $pageCtrl->faq(), //[cite: 1]
     $uri === 'shop' => $productCtrl->shop(), //[cite: 1]
-    str_starts_with($uri, 'product/') => $productCtrl->detail(substr($uri, 8)), //[cite: 1]
+    preg_match('#^product/(.+)/review$#', $uri, $reviewMatch) && $method === 'POST' => $productCtrl->submitReview($reviewMatch[1]),
+    str_starts_with($uri, 'product/') && $method === 'GET' => $productCtrl->detail(substr($uri, 8)),//[cite: 1]
 
     // --- BLOG FRONTEND ---
     $uri === 'blog' && $method === 'GET' => $blogCtrl->index(),
@@ -243,6 +244,12 @@ match (true) { //[cite: 1]
     $uri === 'checkout' && $method === 'GET' => $checkoutCtrl->index(), //[cite: 1]
     $uri === 'checkout' && $method === 'POST' => $checkoutCtrl->process(), //[cite: 1]
     $uri === 'checkout/pending' && $method === 'GET' => $checkoutCtrl->pending(), //[cite: 1]
+
+    $uri === 'checkout/core-charge' && $method === 'POST' => $checkoutCtrl->coreCharge(),
+    $uri === 'checkout/order-status' && $method === 'GET' => $checkoutCtrl->orderStatus(),
+    $uri === 'checkout/midtrans-webhook' && $method === 'POST' => $checkoutCtrl->midtransWebhook(),
+
+    $uri === 'checkout/midtrans-token' && $method === 'POST' => $checkoutCtrl->midtransToken(),
 
     $uri === 'wishlist' && $method === 'GET' => $wishlistCtrl->index(), //[cite: 1]
     $uri === 'wishlist/add' && $method === 'POST' => $wishlistCtrl->add(), //[cite: 1]
