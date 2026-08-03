@@ -50,7 +50,6 @@ class ProductController extends BaseController
     }
 
     // GET /product/{slug}
-    // GET /product/{slug}
     public function detail(string $slug): void
     {
         $product = $this->product->findBySlug($slug);
@@ -63,59 +62,13 @@ class ProductController extends BaseController
         $ratingSummary = $this->product->getRatingSummary($product['id']);
         $reviews = $this->product->getReviews($product['id']);
 
-        $canReview = false;
-        $alreadyReviewed = false;
-        if (isset($_SESSION['user_id'])) {
-            $alreadyReviewed = $this->product->hasUserReviewed($product['id'], $_SESSION['user_id']);
-            $canReview = !$alreadyReviewed && $this->product->userHasPurchased($product['id'], $_SESSION['user_id']);
-        }
-
         $this->view('frontend/product-detail', [
             'title' => $product['title'] . ' — Mizu Design',
             'product' => $product,
             'media' => $media,
             'ratingSummary' => $ratingSummary,
             'reviews' => $reviews,
-            'canReview' => $canReview,
-            'alreadyReviewed' => $alreadyReviewed,
         ]);
-    }
-
-    // POST /product/{slug}/review
-    public function submitReview(string $slug): void
-    {
-        if (!isset($_SESSION['user_id'])) {
-            $this->redirect('/login');
-            return;
-        }
-
-        $product = $this->product->findBySlug($slug);
-        if (!$product) {
-            http_response_code(404);
-            die('Produk tidak ditemukan.');
-        }
-
-        $rating = (int) ($_POST['rating'] ?? 0);
-        $comment = trim($_POST['comment'] ?? '');
-
-        if ($rating < 1 || $rating > 5) {
-            $this->redirect('/product/' . $slug);
-            return;
-        }
-
-        if (!$this->product->userHasPurchased($product['id'], $_SESSION['user_id'])) {
-            $this->redirect('/product/' . $slug);
-            return;
-        }
-
-        if ($this->product->hasUserReviewed($product['id'], $_SESSION['user_id'])) {
-            $this->redirect('/product/' . $slug);
-            return;
-        }
-
-        $this->product->addReview($product['id'], $_SESSION['user_id'], $rating, $comment ?: null);
-
-        $this->redirect('/product/' . $slug . '#reviews');
     }
 
     public function promo()

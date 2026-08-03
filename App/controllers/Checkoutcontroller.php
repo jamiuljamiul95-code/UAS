@@ -3,6 +3,7 @@ namespace App\controllers;
 
 use App\models\Product;
 use App\models\Order;
+use App\models\Download;
 use App\helpers\CartHelper;
 
 class CheckoutController extends BaseController
@@ -285,6 +286,11 @@ class CheckoutController extends BaseController
                     'Invoice ' . $invoice . ' — Rp ' . number_format($order['total'], 0, ',', '.') . ' sudah DIBAYAR.',
                     '/admin/orders'
                 );
+
+                // Generate token download otomatis, sama seperti saat admin ubah status jadi Paid manual.
+                // Tanpa ini, order yang dibayar via Midtrans tidak akan muncul di "Download Saya".
+                $download = new Download();
+                $download->generateForOrder($order['user_id'], $order['id']);
             }
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $this->order->updateStatus($order['id'], 'failed', 'failed');

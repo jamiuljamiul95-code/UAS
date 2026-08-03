@@ -4,18 +4,21 @@ namespace App\controllers;
 use App\models\User;
 use App\models\Order;
 use App\models\Download;
+use App\models\Product;
 
 class DashboardController extends BaseController
 {
     private User $user;
     private Order $order;
     private Download $download;
+    private Product $product;
 
     public function __construct()
     {
         $this->user = new User();
         $this->order = new Order();
         $this->download = new Download();
+        $this->product = new Product();
     }
 
     // GET /dashboard -> halaman ringkasan
@@ -223,12 +226,57 @@ class DashboardController extends BaseController
     // GET /dashboard/downloads
     public function downloads(): void
     {
-        $downloads = $this->download->byUser($_SESSION['user_id'] ?? '');
+        $userId = $_SESSION['user_id'] ?? '';
+        $downloads = $this->download->byUser($userId);
+
+        // Tandai produk mana yang sudah pernah diulas user ini,
+        // supaya popup ulasan hanya muncul sekali per produk.
+        foreach ($downloads as &$d) {
+            $d['already_reviewed'] = $this->product->hasUserReviewed((int) $d['product_id'], (int) $userId);
+        }
+        unset($d);
 
         $this->view('frontend/dashboard/downloads', [
             'title' => 'Download Saya',
             'downloads' => $downloads,
         ]);
+    }
+
+    // POST /dashboard/downloads/review
+    // Dipanggil dari popup ulasan di halaman Download Saya
+    // (pesanan sudah dibayar & file sudah siap diunduh).
+    public function submitDownloadReview(): void
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/login');
+            return;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $productId = (int) ($_POST['product_id'] ?? 0);
+        $rating = (int) ($_POST['rating'] ?? 0);
+        $comment = trim($_POST['comment'] ?? '');
+
+        if ($productId < 1 || $rating < 1 || $rating > 5) {
+            $this->redirect('/dashboard/downloads');
+            return;
+        }
+
+        // Pengaman: pastikan produk ini benar sudah dibeli & belum pernah diulas,
+        // supaya tidak bisa direkayasa lewat request manual di luar popup.
+        if (!$this->product->userHasPurchased($productId, (int) $userId)) {
+            $this->redirect('/dashboard/downloads');
+            return;
+        }
+
+        if ($this->product->hasUserReviewed($productId, (int) $userId)) {
+            $this->redirect('/dashboard/downloads');
+            return;
+        }
+
+        $this->product->addReview($productId, (int) $userId, $rating, $comment ?: null);
+
+        $this->redirect('/dashboard/downloads');
     }
 
     // POST /dashboard/orders/hide

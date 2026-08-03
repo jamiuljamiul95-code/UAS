@@ -178,30 +178,9 @@ $finalPrice = $product['discount'] > 0
             <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
         </div>
 
-        <!-- ===== Rating & Ulasan ===== -->
+        <!-- ===== Rating & Ulasan (tampilan saja, form ulasan ada di halaman Download Saya) ===== -->
         <div class="desc-card" id="reviews" data-aos="fade-up">
             <h6><i class="ti ti-star"></i> Ulasan Pembeli (<?= (int) $ratingSummary['total_reviews'] ?>)</h6>
-
-            <?php if ($canReview): ?>
-            <form action="<?= BASE_URL ?>/product/<?= $product['slug'] ?>/review" method="POST"
-                class="review-form mb-4">
-                <label class="fw-semibold small mb-2 d-block">Kasih rating & ulasan kamu</label>
-                <div class="star-rating-input mb-3">
-                    <?php for ($i = 5; $i >= 1; $i--): ?>
-                    <input type="radio" name="rating" id="star<?= $i ?>" value="<?= $i ?>"
-                        <?= $i == 5 ? 'checked' : '' ?>>
-                    <label for="star<?= $i ?>"><i class="ti ti-star-filled"></i></label>
-                    <?php endfor; ?>
-                </div>
-                <textarea name="comment" class="form-control mb-3" rows="3"
-                    placeholder="Ceritakan pengalamanmu dengan produk ini (opsional)"></textarea>
-                <button type="submit" class="btn-cart-lg" style="width:auto">Kirim Ulasan</button>
-            </form>
-            <?php elseif ($alreadyReviewed): ?>
-            <p class="small text-secondary mb-4">✅ Kamu sudah memberi ulasan untuk produk ini. Terima kasih!</p>
-            <?php elseif (isset($_SESSION['user_id'])): ?>
-            <p class="small text-secondary mb-4">Beli & bayar produk ini dulu untuk bisa memberi ulasan.</p>
-            <?php endif; ?>
 
             <?php if (empty($reviews)): ?>
             <p class="small text-secondary mb-0">Belum ada ulasan untuk produk ini.</p>

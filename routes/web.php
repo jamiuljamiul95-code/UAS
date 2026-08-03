@@ -157,6 +157,7 @@ if (str_starts_with($uri, 'dashboard')) { //[cite: 1]
         $uri === 'dashboard/orders/hide' && $method === 'POST' => $dashboardCtrl->hideOrder(), //[cite: 1]
         $uri === 'dashboard/downloads/hide' && $method === 'POST' => $dashboardCtrl->hideDownload(), //[cite: 1]
         $uri === 'dashboard/downloads/hide-expired' && $method === 'POST' => $dashboardCtrl->hideAllExpiredDownloads(), //[cite: 1]
+        $uri === 'dashboard/downloads/review' && $method === 'POST' => $dashboardCtrl->submitDownloadReview(),
 
         default => (function () { //[cite: 1]
                 http_response_code(404); //[cite: 1]
@@ -229,7 +230,7 @@ match (true) { //[cite: 1]
     $uri === 'about' => $pageCtrl->about(), //[cite: 1]
     $uri === 'faq' => $pageCtrl->faq(), //[cite: 1]
     $uri === 'shop' => $productCtrl->shop(), //[cite: 1]
-    preg_match('#^product/(.+)/review$#', $uri, $reviewMatch) && $method === 'POST' => $productCtrl->submitReview($reviewMatch[1]),
+    // (route ulasan lewat halaman produk sudah dipindah ke /dashboard/downloads/review)
     str_starts_with($uri, 'product/') && $method === 'GET' => $productCtrl->detail(substr($uri, 8)),//[cite: 1]
 
     // --- BLOG FRONTEND ---
