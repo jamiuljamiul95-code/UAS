@@ -1,1 +1,14 @@
 .env
+
+# Folder gambar/screenshot yang berat, nggak perlu ikut ke git
+foto tahapan/
+public/assets/images/products/
+public/assets/images/avatars/
+
+# Dependencies
+/vendor/
+
+# Storage runtime
+/storage/cache/*
+/storage/logs/*
+/storage/sessions/*
